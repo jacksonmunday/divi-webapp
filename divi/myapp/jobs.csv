@@ -1,12 +1,12 @@
 name,description,reward,cooldown,last_completed
-Empty indoor veggie bin,<br><br>,1,0,2023_12_12_21_56_38
-Empty indoor recycling,<br>,1,0,0001_01_01_00_00_00
-Empty indoor rubbish,<br>,1,0,2023_12_12_22_08_00
+Empty indoor veggie bin,<br><br>,1,0,0001_01_01_00_00_00
+Empty indoor recycling,<br>,1,0,2023_12_12_22_15_46
+Empty indoor rubbish,<br>,1,0,2023_12_12_22_15_43
 Empty dishwasher,<br>,2,0,0001_01_01_00_00_00
 Wheelie bins,Take out<br>Take back in<br>,2,0,0001_01_01_00_00_00
 Vacuum carpet areas    ,Lounge<br>Hallway<br>Indoor toilet<br>Shower room<br>,4,168,0001_01_01_00_00_00
 Vacuum wood areas,Lounge\xa0<br>Kitchen<br>Dining area<br>,4,168,0001_01_01_00_00_00
 Clean shower,<br>,6,672,0001_01_01_00_00_00
-Clean sinks and toilet,Shower Room sink<br>Toilet Sink<br>Clean toilet<br>Throw out empty rolls<br>,6,336,2023_12_12_21_48_07
-Mow lawns,Back yard<br>Front yard<br>Roadside<br>,5,336,2023_12_12_21_42_25
-Clean Group towels,Wash them<br>Hang out to dry<br>Take back inside<br>,4,336,2023_12_12_21_45_06
+Clean sinks and toilet,Shower Room sink<br>Toilet Sink<br>Clean toilet<br>Throw out empty rolls<br>,6,336,0001_01_01_00_00_00
+Mow lawns,Back yard<br>Front yard<br>Roadside<br>,5,336,0001_01_01_00_00_00
+Clean Group towels,Wash them<br>Hang out to dry<br>Take back inside<br>,4,336,0001_01_01_00_00_00
