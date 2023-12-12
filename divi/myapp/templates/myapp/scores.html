@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scores</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'myapp/css/styles.css' %}">
+    <style>
+        .profile-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .profile-button {
+    font-size: 1.2em;
+    padding: 8px;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    width: 70%;
+    background-color: #f2f2f2;
+    color: #000;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+.profile-text {
+    margin-right: 10px; /* Adjust the margin as needed */
+}
+
+        .profile-button:hover {
+            background-color: #d9d9d9;
+        }
+
+        .details-button {
+            font-size: 1.2em;
+            padding: 8px;
+            margin: 10px 0;
+            width: 28%;
+            background-color: #f2f2f2;
+            color: #000;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+            text-decoration: none;
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+        }
+
+        .details-button:hover {
+            background-color: #d9d9d9;
+        }
+
+        .reward-box, .balance-box {
+            padding: 3px 6px;
+            border-radius: 5px;
+        }
+
+
+        .reward-box {
+            padding: 3px 6px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .balance-box {
+            background-color: #f2f2f2;
+            color: #000;
+            border-radius: 5px;
+        }
+
+        .balance-box-positive {
+            padding: 3px 6px;
+            border-radius: 5px;
+            background-color: #00ff00;
+        }
+
+        .balance-box-negative {
+            padding: 3px 6px;
+            border-radius: 5px;
+            background-color: #ff0000;
+            color: #fff;
+        }
+
+        .navigation-bar {
+            /* Your existing navigation bar styles remain unchanged */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="center-text">
+            Scores
+        </h1>
+
+        <!-- Display profile buttons with total rewards and details button -->
+        <div>
+            {% for profile, total_reward, balance in totals_per_profile %}
+                <div class="profile-container">
+    <a href="{% url 'scores_details' selected_profile=profile %}" class="big-button profile-button">
+        <span class="profile-text">{{ profile }}</span>
+        <div class="balance-box{% if balance >= 0 %}-positive{% else %}-negative{% endif %}">{{ balance }}$</div>
+        <div class="reward-box">{{ total_reward }}$</div>
+    </a>
+    <a href="{% url 'scores_details' selected_profile=profile %}" class="big-button details-button">Details</a>
+</div>
+            {% endfor %}
+        </div>
+
+        <!-- Navigation Bar -->
+        <div class="navigation-bar">
+            <a href="{% url 'jobs' %}">Jobs</a>
+            <a href="{% url 'scores' %}">Scores</a>
+        </div>
+    </div>
+</body>
+</html>
+

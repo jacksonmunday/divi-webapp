@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'myapp/css/styles.css' %}">
+    <style>
+        .text-center {
+            text-align: center;
+        }
+
+        .invisible-box {
+            height: 25px; /* Adjust the height as needed */
+        }
+
+        .reward-box {
+            background-color: #ffd700; /* Yellow color */
+            color: #000; /* Black text color */
+            padding: 3px 6px; /* Adjust padding as needed */
+            border-radius: 5px; /* Rounded corners */
+            display: inline-block;
+        }
+
+        .job-name {
+            font-size: 1.5em; /* Adjust the font size as needed */
+            margin-bottom: 10px; /* Adjust margin as needed */
+        }
+
+        .job-details-box {
+            background-color: #f5f5f5; /* Light gray background */
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .complete-button {
+            background-color: green;
+            color: white;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        .back-button {
+            position: relative;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007bff; /* Blue color */
+            color: #fff; /* White text color */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none; /* Remove underline */
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        .complete-form {
+            margin-top: 20px;
+        }
+
+        .checkbox-container {
+            margin-bottom: 10px; /* Increased margin */
+            display: flex;
+            align-items: center; /* Align checkbox and label vertically */
+        }
+
+        .checkbox-container input {
+            width: 20px; /* Adjust the width as needed for bigger checkboxes */
+            height: 20px; /* Adjust the height as needed for bigger checkboxes */
+            margin-right: 10px; /* Spacing between checkbox and label */
+        }
+
+        .complete-button:disabled {
+            background-color: #999; /* Gray out the button when disabled */
+            cursor: not-allowed;
+        }
+    </style>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var checklist = document.getElementById("checklist");
+        var completeButton = document.querySelector(".complete-button");
+        var checkboxes = [];
+
+        var description = "{{ selected_job_details.description|safe }}";
+        var items = description.split('<br>');
+
+        items.forEach(function(item) {
+            if (item.trim() !== "") {
+                var checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.id = "checkbox_" + item;
+                checkbox.name = "checkbox_" + item;
+
+                var label = document.createElement("label");
+                label.htmlFor = "checkbox_" + item;
+                label.appendChild(document.createTextNode(item));
+
+                var checkboxContainer = document.createElement("div");
+                checkboxContainer.classList.add("checkbox-container");
+                checkboxContainer.appendChild(checkbox);
+                checkboxContainer.appendChild(label);
+
+                checklist.appendChild(checkboxContainer);
+
+                checkboxes.push(checkbox); // Store checkboxes in an array
+            }
+        });
+
+        if (checkboxes.length > 0) {
+            checkboxes.forEach(function (checkbox) {
+                checkbox.addEventListener('change', validateCheckboxes);
+            });
+        } else {
+            completeButton.disabled = false; // Enable the "Complete" button when there are no checkboxes
+        }
+
+        function validateCheckboxes() {
+            var allChecked = checkboxes.length === 0 || checkboxes.every(function (checkbox) {
+                return checkbox.checked;
+            });
+
+            completeButton.disabled = !allChecked;
+        }
+    });
+</script>
+
+</head>
+<body>
+    <div class="container text-center">
+        <h1 class="green">
+            Job Details
+        </h1>
+
+        {% if selected_job_details %}
+            <div class="job-details-box">
+                <p class="job-name">{{ selected_job_details.name }}</p>
+                <p>Reward: <span class="reward-box">${{ selected_job_details.reward }}</span></p>
+                <p>Cooldown: {{ selected_job_details.cooldown_formatted }}</p>
+
+                {% if selected_job_details.show_complete_button %}
+                    <div id="checklist"></div>
+                    <form method="post" action="{% url 'complete_job' %}" class="complete-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="selected_job_name" value="{{ selected_job_details.name }}">
+                        <button type="submit" class="complete-button" name="complete_button" disabled>Complete</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% else %}
+            <p>No job details found.</p>
+        {% endif %}
+
+        <!-- Navigation Bar -->
+        <div class="navigation-bar">
+            <a href="{% url 'jobs' %}">Jobs</a>
+            <a href="{% url 'scores' %}">Scores</a>
+        </div>
+
+        <!-- Back Button -->
+        <a href="{% url 'jobs' %}" class="back-button">Back</a>
+        <div class="invisible-box"></div>
+    </div>
+<div class="invisible-box"></div>
+<div class="invisible-box"></div>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!-- myapp/templates/myapp/profiles.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profiles</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'myapp/css/styles.css' %}">
+    <style>
+        .big-button {
+            font-size: 1.2em;
+            padding: 8px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%; /* Extend the width to 100% of the container */
+            background-color: #f2f2f2; /* Light grey color */
+            color: #000; /* Black text color */
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+            text-decoration: none; /* Remove underlining */
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="center-text">Profiles</h1>
+
+        <!-- Display profile buttons -->
+        {% for profile in profiles %}
+            <form method="post" action="{% url 'jobs' %}">
+                {% csrf_token %}
+                <button type="submit" name="selected_profile" value="{{ profile }}" class="big-button">
+                    {{ profile }}
+                </button>
+            </form>
+        {% endfor %}
+
+        <!-- Navigation Bar -->
+        <div class="navigation-bar">
+            <a href="{% url 'jobs' %}">Jobs</a>
+            <a href="{% url 'scores' %}">Scores</a>
+        </div>
+    </div>
+</body>
+</html>
+
+
