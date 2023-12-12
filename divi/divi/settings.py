@@ -27,7 +27,7 @@ DEBUG = True
 
 # settings.py
 
-ALLOWED_HOSTS = ['diviwebapp.pythonanywhere.com']
+ALLOWED_HOSTS = ['diviwebapp.pythonanywhere.com','127.0.0.1']
 
 # Application definition
 
