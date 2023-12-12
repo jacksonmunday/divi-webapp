@@ -24,7 +24,7 @@ def get_client_ip(request):
 
 
 def update_user_data_log(ip, path, time):
-    log_file_path = 'myapp/user_data_log.csv'  # Replace with the actual path to your CSV file
+    log_file_path = '/home/diviwebapp/divi-webapp/divi/myapp/views.py'  # Replace with the actual path to your CSV file
 
     # Create a new line for the CSV file
     new_log_entry = {
