@@ -6,6 +6,12 @@ from django.http import HttpResponse
 from datetime import datetime
 from django.views.decorators.http import require_POST
 
+JOBS_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/jobs.csv'
+JOBS_LOG_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/jobs_log.csv'
+PROFILE_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/profiles.csv'
+USER_DATA_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/user_data_log.csv'
+
+
 
 def log_user_data(request):
     client_ip = get_client_ip(request)
@@ -24,7 +30,7 @@ def get_client_ip(request):
 
 
 def update_user_data_log(ip, path, time):
-    log_file_path = '/home/diviwebapp/divi-webapp/divi/myapp/views.py'  # Replace with the actual path to your CSV file
+    log_file_path = USER_DATA_FILE_PATH
 
     # Create a new line for the CSV file
     new_log_entry = {
@@ -70,7 +76,7 @@ def complete_job(request):
 
 
 def update_jobs_log(profile_name, job, date_completed):
-    log_file_path = 'myapp/jobs_log.csv'  # Replace with the actual path to your CSV file
+    log_file_path = JOBS_LOG_FILE_PATH  # Replace with the actual path to your CSV file
 
     # Create a new line for the CSV file
     new_log_entry = {
@@ -93,7 +99,7 @@ def update_jobs_log(profile_name, job, date_completed):
 
 def update_jobs_csv(job_name):
     # Update jobs.csv with the current date and time
-    with open('myapp/jobs.csv', 'r', newline='') as csvfile:
+    with open(JOBS_FILE_PATH, 'r', newline='') as csvfile:
         jobs_list = list(csv.DictReader(csvfile))
 
     for job in jobs_list:
@@ -101,7 +107,7 @@ def update_jobs_csv(job_name):
             job['last_completed'] = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
             break
 
-    with open('myapp/jobs.csv', 'w', newline='') as csvfile:
+    with open(JOBS_FILE_PATH, 'w', newline='') as csvfile:
         fieldnames = jobs_list[0].keys()
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
@@ -110,7 +116,7 @@ def update_jobs_csv(job_name):
 
 def update_profiles_csv(profile_name, job_name):
     # Update profiles.csv with a new line for the completed job
-    profiles_file_path = 'myapp/profiles.csv'
+    profiles_file_path = PROFILE_FILE_PATH
 
     # Read existing fieldnames from the CSV file
     with open(profiles_file_path, 'r') as csvfile:
@@ -192,7 +198,7 @@ def convert_cooldown(cooldown):
 
 
 def get_job_details(job_name):
-    with open('myapp/jobs.csv', newline='') as csvfile:
+    with open(JOBS_FILE_PATH, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             if row['name'] == job_name:
@@ -202,7 +208,7 @@ def get_job_details(job_name):
 
 def load_jobs():
     jobs_list = []
-    with open('myapp/jobs.csv', newline='') as csvfile:
+    with open(JOBS_FILE_PATH, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             jobs_list.append(row)
@@ -212,7 +218,7 @@ def load_jobs():
 
 def profiles(request):
     log_user_data(request)
-    with open('myapp/profiles.csv', newline='') as csvfile:
+    with open(PROFILE_FILE_PATH, newline='') as csvfile:
         reader = csv.reader(csvfile)
         profiles = next(reader)
 
@@ -235,7 +241,7 @@ def show_complete_button(selected_job_details):
     return time_difference.total_seconds() / 3600 > cooldown_hours
 
 
-def find_totals_per_profile(file_path='myapp/profiles.csv', jobs_file='myapp/jobs.csv'):
+def find_totals_per_profile(file_path=PROFILE_FILE_PATH, jobs_file=JOBS_FILE_PATH):
     # Read the CSV file
     with open(file_path, 'r') as file:
         reader = csv.reader(file)
@@ -270,7 +276,7 @@ def find_totals_per_profile(file_path='myapp/profiles.csv', jobs_file='myapp/job
     return totals_per_profile_with_balance
 
 
-def get_score_details(file_path='myapp/profiles.csv'):
+def get_score_details(file_path=PROFILE_FILE_PATH):
     # Read the CSV file
     with open(file_path, 'r') as file:
         reader = csv.reader(file)
@@ -338,7 +344,7 @@ def add_job(request):
             cooldown_in_hours = int(cooldown_weeks) * 7 * 24 + int(cooldown_days) * 24 + int(cooldown_hours)
 
             # Update jobs.csv with the new job
-            with open('myapp/jobs.csv', 'a', newline='') as csvfile:
+            with open(JOBS_FILE_PATH, 'a', newline='') as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerow([name, description, reward, cooldown_in_hours, '0001_01_01_00_00_00'])
 
@@ -347,7 +353,7 @@ def add_job(request):
     return render(request, 'myapp/add_job.html')  # Render the add_job.html template
 
 
-def get_rewards_per_job_name(job_names, file_path = 'myapp/jobs.csv'):
+def get_rewards_per_job_name(job_names, file_path = JOBS_FILE_PATH):
     # Read the CSV file
     with open(file_path, 'r') as file:
         reader = csv.reader(file)
