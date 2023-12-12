@@ -1,0 +1,65 @@
+/* myapp/static/myapp/css/styles.css */
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+.container {
+    /* Adjusted to center the content within the full width of the screen */
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.navigation-bar {
+    background-color: #444;
+    display: flex;
+    justify-content: space-around;
+    font-size: 1.5em;
+    padding: 25px 0;
+    position: fixed;
+    bottom: 0;
+    left: 0; /* Ensure the navigation bar starts from the left edge */
+    width: 100%;
+    margin: 0;
+}
+
+.navigation-bar a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.big-button {
+    font-size: 1.5em; /* Adjust the font size as needed */
+    padding: 15px 30px; /* Adjust the padding as needed */
+    display: block;
+    margin: 20px 0; /* Center the button horizontally and add margin for spacing */
+}
+
+.reward-box {
+    display: inline-block;
+    background-color: #ffd700; /* Yellow color */
+    color: #000; /* Black text color */
+    padding: 5px 10px; /* Adjust padding as needed */
+    margin-left: 10px; /* Adjust margin as needed */
+    border-radius: 5px; /* Rounded corners */
+}
+
+.job-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.job-button {
+    margin-right: 10px; /* Add margin between button and reward box */
+}

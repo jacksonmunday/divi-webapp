@@ -23,7 +23,7 @@ body {
     background-color: #444;
     display: flex;
     justify-content: space-around;
-    padding: 15px 0;
+    padding: 30px 0;
     position: fixed;
     bottom: 0;
     left: 0; /* Ensure the navigation bar starts from the left edge */
