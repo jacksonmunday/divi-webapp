@@ -6,10 +6,18 @@ from django.http import HttpResponse
 from datetime import datetime
 from django.views.decorators.http import require_POST
 
-JOBS_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/jobs.csv'
-JOBS_LOG_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/jobs_log.csv'
-PROFILE_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/profiles.csv'
-USER_DATA_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/user_data_log.csv'
+dev = True
+
+if not dev:
+    JOBS_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/jobs.csv'
+    JOBS_LOG_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/jobs_log.csv'
+    PROFILE_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/profiles.csv'
+    USER_DATA_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/user_data_log.csv'
+else:
+    JOBS_FILE_PATH = 'myapp/jobs.csv'
+    JOBS_LOG_FILE_PATH = 'myapp/jobs_log.csv'
+    PROFILE_FILE_PATH = 'myapp/profiles.csv'
+    USER_DATA_FILE_PATH = 'myapp/user_data_log.csv'
 
 
 
