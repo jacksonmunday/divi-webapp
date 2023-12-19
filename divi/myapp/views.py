@@ -2,11 +2,10 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 import csv
-from django.http import HttpResponse
 from datetime import datetime
 from django.views.decorators.http import require_POST
 
-dev = False  # True if running from laptop
+dev = True  # True if running from laptop
 
 if not dev:
     JOBS_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/jobs.csv'
@@ -215,8 +214,14 @@ def load_jobs():
         reader = csv.DictReader(csvfile)
         for row in reader:
             jobs_list.append(row)
+    return sort_by_reward(jobs_list)
 
-    return jobs_list
+
+def sort_by_reward(task_list):
+    # Use the sorted function to sort the list based on the 'reward' key
+    sorted_list = sorted(task_list, key=lambda x: int(x['reward']))
+
+    return sorted_list
 
 
 def profiles(request):
@@ -301,9 +306,7 @@ def scores_details(request, selected_profile):
     # Filter out 'None' values
     selected_score_details = [detail for detail in selected_score_details if detail != 'None']
 
-
     reward_details = get_rewards_per_job_name(selected_score_details)
-
 
     return render(request, 'myapp/scores_details.html',
                   {'selected_profile': selected_profile, 'score_details': selected_score_details,
