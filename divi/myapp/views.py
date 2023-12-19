@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from datetime import datetime
 from django.views.decorators.http import require_POST
 
-dev = True
+dev = False  # True if running from laptop
 
 if not dev:
     JOBS_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/jobs.csv'
@@ -20,21 +20,16 @@ else:
     USER_DATA_FILE_PATH = 'myapp/user_data_log.csv'
 
 
-
 def log_user_data(request):
-    client_ip = get_client_ip(request)
+    client_ip = get_client_name(request)
     path = request.path_info
     time = datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
     update_user_data_log(client_ip, path, time)
 
 
-def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
+def get_client_name(request):
+    profile_name = request.session.get('selected_profile')
+    return profile_name
 
 
 def update_user_data_log(ip, path, time):
@@ -305,13 +300,14 @@ def scores_details(request, selected_profile):
 
     # Filter out 'None' values
     selected_score_details = [detail for detail in selected_score_details if detail != 'None']
-    print(selected_score_details)
+
 
     reward_details = get_rewards_per_job_name(selected_score_details)
-    print(reward_details)
+
 
     return render(request, 'myapp/scores_details.html',
-                  {'selected_profile': selected_profile, 'score_details': selected_score_details, 'reward_details': reward_details})
+                  {'selected_profile': selected_profile, 'score_details': selected_score_details,
+                   'reward_details': reward_details})
 
 
 def calculate_balance(totals_per_profile):
@@ -361,7 +357,7 @@ def add_job(request):
     return render(request, 'myapp/add_job.html')  # Render the add_job.html template
 
 
-def get_rewards_per_job_name(job_names, file_path = JOBS_FILE_PATH):
+def get_rewards_per_job_name(job_names, file_path=JOBS_FILE_PATH):
     # Read the CSV file
     with open(file_path, 'r') as file:
         reader = csv.reader(file)
