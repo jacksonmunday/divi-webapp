@@ -5,7 +5,7 @@ import csv
 from datetime import datetime
 from django.views.decorators.http import require_POST
 
-dev = False # True if running from laptop
+dev = True # True if running from laptop
 
 
 if not dev:
@@ -179,6 +179,18 @@ def job_details(request):
 
         # Convert cooldown from hours to weeks, days, and hours
         selected_job_details['cooldown_formatted'] = convert_cooldown(selected_job_details['cooldown'])
+
+        # Calculate and display "Time since last complete"
+        last_completed_time = datetime.strptime(selected_job_details['last_completed'], "%Y_%m_%d_%H_%M_%S")
+        current_time = datetime.now()
+        time_difference = current_time - last_completed_time
+
+        # Convert time difference to weeks, days, and hours
+        weeks = time_difference.days // 7
+        days = time_difference.days % 7
+        hours, remainder = divmod(time_difference.seconds, 3600)
+
+        selected_job_details['time_since_last_complete'] = f"{weeks} weeks, {days} days, {hours} hours"
 
         # Check if the "Complete" button should be shown
         selected_job_details['show_complete_button'] = show_complete_button(selected_job_details)

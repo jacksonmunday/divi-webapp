@@ -144,19 +144,20 @@
 
         {% if selected_job_details %}
             <div class="job-details-box">
-                <p class="job-name">{{ selected_job_details.name }}</p>
-                <p>Reward: <span class="reward-box">${{ selected_job_details.reward }}</span></p>
-                <p>Cooldown: {{ selected_job_details.cooldown_formatted }}</p>
+    <p class="job-name">{{ selected_job_details.name }}</p>
+    <p>Reward: <span class="reward-box">${{ selected_job_details.reward }}</span></p>
+    <p>Cooldown: {{ selected_job_details.cooldown_formatted }}</p>
+    <p>Last Completed: {{ selected_job_details.time_since_last_complete }}</p>
 
-                {% if selected_job_details.show_complete_button %}
-                    <div id="checklist"></div>
-                    <form method="post" action="{% url 'complete_job' %}" class="complete-form">
-                        {% csrf_token %}
-                        <input type="hidden" name="selected_job_name" value="{{ selected_job_details.name }}">
-                        <button type="submit" class="complete-button" name="complete_button" disabled>Complete</button>
-                    </form>
-                {% endif %}
-            </div>
+    {% if selected_job_details.show_complete_button %}
+        <div id="checklist"></div>
+        <form method="post" action="{% url 'complete_job' %}" class="complete-form">
+            {% csrf_token %}
+            <input type="hidden" name="selected_job_name" value="{{ selected_job_details.name }}">
+            <button type="submit" class="complete-button" name="complete_button" disabled>Complete</button>
+        </form>
+    {% endif %}
+</div>
         {% else %}
             <p>No job details found.</p>
         {% endif %}
