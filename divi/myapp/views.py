@@ -7,6 +7,7 @@ from django.views.decorators.http import require_POST
 
 dev = False # True if running from laptop
 
+
 if not dev:
     JOBS_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/jobs.csv'
     JOBS_LOG_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/jobs_log.csv'
