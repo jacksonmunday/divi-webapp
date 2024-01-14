@@ -1,14 +1,17 @@
 name,description,reward,cooldown,last_completed
-Empty indoor veggie bin,<br>Must be full<br>,1,0,2023_12_18_21_39_05
-Empty indoor recycling,<br>Must be full<br>,1,0,2023_12_18_23_18_28
-Empty indoor rubbish,<br>Must be full<br>,1,0,2023_12_18_23_18_30
-Empty dishwasher,<br>,2,0,2023_12_18_21_39_10
-Wheelie bins,Take out<br>Take back in<br>,2,0,2023_12_17_22_16_53
-Vacuum carpet areas    ,Lounge<br>Hallway<br>Indoor toilet<br>Shower room<br>,4,168,0001_01_01_00_00_00
-Vacuum wood areas,Lounge\xa0<br>Kitchen<br>Dining area<br>,4,168,2023_12_14_03_40_11
-Clean shower,<br>,6,672,0001_01_01_00_00_00
-Clean sinks and toilet,Shower Room sink<br>Toilet Sink<br>Clean toilet<br>Throw out empty rolls<br>,6,336,0001_01_01_00_00_00
-Mow lawns,Back yard<br>Front yard<br>Roadside<br>,5,336,2023_12_14_00_44_06
-Clean Group towels,Wash them<br>Hang out to dry<br>Take back inside<br>,4,336,2023_12_17_22_05_41
+Empty indoor veggie bin,<br>Must be full<br>,1,0,2024_01_10_19_17_49
+Empty indoor recycling,<br>Must be full<br>,1,0,2024_01_14_06_32_54
+Empty indoor rubbish,<br>Must be full<br>,1,0,2024_01_12_23_56_37
+Empty dishwasher,<br>,2,0,2024_01_14_02_20_40
+Wheelie bins,Take out<br>Take back in<br>,2,0,2024_01_10_12_37_27
+Vacuum carpet areas    ,Lounge<br>Hallway<br>Indoor toilet<br>Shower room<br>,4,168,2024_01_09_02_01_50
+Vacuum wood areas,Lounge\xa0<br>Kitchen<br>Dining area<br>,4,168,2024_01_09_02_01_56
+Clean shower,<br>,6,672,2024_01_09_02_28_27
+Clean sinks and toilet,Shower Room sink<br>Toilet Sink<br>Clean toilet<br>Throw out empty rolls<br>,6,336,2024_01_08_23_59_50
+Mow lawns,Back yard<br>Front yard<br>Roadside<br>,5,165,2024_01_09_04_29_11
+Clean Group towels,Wash them<br>Hang out to dry<br>Take back inside<br>,4,336,2024_01_09_05_15_48
 Deep clean rubbish bins,Indoor recycling bin<br>Indoor rubbish bin<br>Indoor veggie bin<br>,10,672,2023_12_19_04_47_53
-Kill all driveway weeds,<br>,15,672,0001_01_01_00_00_00
+Kill all driveway weeds,<br>,15,672,2024_01_09_00_07_35
+Clean Fireplace ,Empty ashes<br>Vacuum mess<br>,2,168,2023_12_19_22_37_20
+Deep clean kitchen,Clean wall tiles<br>Clean grime from sink<br>Clean windowsill<br>Wipe down cabinet doors<br><br>Clean stove top<br>Move kitchen appliances and clean behind<br><br>,8,504,2023_12_27_22_48_56
+Mega weed clean (toby),<br>,30,1680,2024_01_10_12_37_34

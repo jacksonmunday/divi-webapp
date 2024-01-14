@@ -5,7 +5,7 @@ import csv
 from datetime import datetime
 from django.views.decorators.http import require_POST
 
-dev = True  # True if running from laptop
+dev = False # True if running from laptop
 
 if not dev:
     JOBS_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/jobs.csv'
