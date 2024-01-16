@@ -5,8 +5,7 @@ import csv
 from datetime import datetime
 from django.views.decorators.http import require_POST
 
-dev = True # True if running from laptop
-
+dev = True  # True if running from laptop
 
 if not dev:
     JOBS_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/jobs.csv'
@@ -20,43 +19,62 @@ else:
     USER_DATA_FILE_PATH = 'myapp/user_data_log.csv'
 
 
-def log_user_data(request):
-    client_ip = get_client_name(request)
-    path = request.path_info
-    time = datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
-    update_user_data_log(client_ip, path, time)
+class Job:
+
+    def __init__(self, name, description, reward, cooldown_weeks, cooldown_days, cooldown_hours, last_completed):
+        self.name = name
+        self.description = description
+        self.reward = reward
+        self.cooldown_in_hours = int(cooldown_weeks) * 7 * 24 + int(cooldown_days) * 24 + int(cooldown_hours)
+        self.last_completed = last_completed
+
+    def update_last_completed(self):
+        self.last_completed = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 
 
-def get_client_name(request):
-    profile_name = request.session.get('selected_profile')
-    return profile_name
+class Profile:
+    def __init__(self, name):
+        self.name = name
+        self.jobs_completed = None
 
 
-def update_user_data_log(ip, path, time):
-    log_file_path = USER_DATA_FILE_PATH
+class LogData:
+    """
+    When this class is called it will log the users data to the data log
+    """
+    def __init__(self, request):
+        self.request = request
+        self.update_user_data()
 
-    # Create a new line for the CSV file
-    new_log_entry = {
-        'ip': ip,
-        'path': path,
-        'time': time,
-    }
+    def get_client_name(self):
+        profile_name = self.request.session.get('selected_profile')
+        return profile_name
 
-    # Append the new line to the CSV file
-    with open(log_file_path, 'a', newline='') as csvfile:
-        fieldnames = ['ip', 'path', 'time']
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    def update_user_data(self):
+        log_file_path = USER_DATA_FILE_PATH
 
-        # If the file is empty, write the header
-        if csvfile.tell() == 0:
-            writer.writeheader()
+        # Create a new line for the CSV file
+        new_log_entry = {
+            'ip': self.get_client_name(),
+            'path': self.request.path_info,
+            'time': datetime.now().strftime('%Y_%m_%d_%H_%M_%S'),
+        }
 
-        writer.writerow(new_log_entry)
+        # Append the new line to the CSV file
+        with open(log_file_path, 'a', newline='') as csvfile:
+            fieldnames = ['ip', 'path', 'time']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+            # If the file is empty, write the header
+            if csvfile.tell() == 0:
+                writer.writeheader()
+
+            writer.writerow(new_log_entry)
 
 
 @require_POST
 def complete_job(request):
-    log_user_data(request)
+    LogData(request)
     selected_profile = request.session.get('selected_profile', None)
     selected_job_name = request.POST.get('selected_job_name', None)
     date_time_completed = datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
@@ -137,7 +155,7 @@ def update_profiles_csv(profile_name, job_name):
 
 
 def jobs(request):
-    log_user_data(request)
+    LogData(request)
     selected_profile = request.session.get('selected_profile', None)
     jobs_list = load_jobs()
 
@@ -167,7 +185,7 @@ def jobs(request):
 
 
 def job_details(request):
-    log_user_data(request)
+    LogData(request)
     selected_job_name = request.POST.get('selected_job_name', None)
 
     if request.method == 'POST':
@@ -238,7 +256,7 @@ def sort_by_reward(task_list):
 
 
 def profiles(request):
-    log_user_data(request)
+    LogData(request)
     with open(PROFILE_FILE_PATH, newline='') as csvfile:
         reader = csv.reader(csvfile)
         profiles = next(reader)
@@ -247,7 +265,7 @@ def profiles(request):
 
 
 def scores(request):
-    log_user_data(request)
+    LogData(request)
     totals_per_profile = find_totals_per_profile()
     # print(read_csv_and_transpose())
     return render(request, 'myapp/scores.html', {'totals_per_profile': totals_per_profile})
@@ -310,7 +328,7 @@ def get_score_details(file_path=PROFILE_FILE_PATH):
 
 
 def scores_details(request, selected_profile):
-    log_user_data(request)
+    LogData(request)
     score_details = get_score_details()
 
     # Find the score details for the selected profile
@@ -346,7 +364,7 @@ def calculate_balance(totals_per_profile):
 
 
 def add_job(request):
-    log_user_data(request)
+    LogData(request)
     if request.method == 'POST':
         name = request.POST.get('name')
 
