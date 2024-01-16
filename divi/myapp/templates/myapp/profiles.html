@@ -14,14 +14,53 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 100%; /* Extend the width to 100% of the container */
-            background-color: #f2f2f2; /* Light grey color */
-            color: #000; /* Black text color */
+            width: 100%;
+            background-color: #f2f2f2;
+            color: #000;
             border: 1px solid #ccc;
             border-radius: 8px;
             overflow: hidden;
-            text-decoration: none; /* Remove underlining */
+            text-decoration: none;
             transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+        }
+
+        /* Style for selected dates */
+        .selected-date {
+            background-color: #FF0000; /* Red */
+            color: #fff;
+        }
+
+        /* Style for the calendar container */
+        .calendar-container {
+            margin-top: 10px;
+        }
+
+        /* Style for the calendar grid */
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        /* Style for each day button in the calendar */
+        .calendar button {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* Style for the day names row */
+        .day-names {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        /* Style for each day name in the day names row */
+        .day-names div {
+            text-align: center;
         }
     </style>
 </head>
@@ -46,15 +85,89 @@
             </select>
         </form>
 
+        <h1 class="center-text">Select Dates Away</h1>
+
+        <!-- Month selection input -->
+        <label for="selectedMonth">Select a month:</label>
+        <input type="month" id="selectedMonth" onchange="renderCalendar()" value="{{ current_month }}">
+
+        <!-- Calendar container -->
+        <div class="calendar-container">
+            <!-- Day names row -->
+            <div class="day-names">
+                <div>Sun</div>
+                <div>Mon</div>
+                <div>Tue</div>
+                <div>Wed</div>
+                <div>Thu</div>
+                <div>Fri</div>
+                <div>Sat</div>
+            </div>
+
+            <!-- Calendar grid -->
+            <div id="calendar" class="calendar"></div>
+        </div>
+
         <!-- Navigation Bar -->
         <div class="navigation-bar">
+            <a href="{% url 'profiles' %}">Profile</a>
             <a href="{% url 'jobs' %}">Jobs</a>
             <a href="{% url 'scores' %}">Scores</a>
-            <a href="{% url 'profiles' %}">Profiles</a>
+
         </div>
     </div>
+
+
+
+    <script>
+        function renderCalendar() {
+            var calendarDiv = document.getElementById('calendar');
+            calendarDiv.innerHTML = '';
+
+            // Get the selected month and year from the input
+            var selectedMonth = document.getElementById('selectedMonth').value || new Date().toISOString().slice(0, 7); // Use current month if not set
+            var date = new Date(selectedMonth + '-01'); // Use the 1st day of the selected month
+
+            // Create a grid of buttons for each day
+            while (date.getMonth() === new Date(selectedMonth + '-01').getMonth()) {
+                var dayCell = document.createElement('button');
+                dayCell.textContent = date.getDate();
+
+                // Check if the date is in the past
+                if (date < new Date()) {
+                    dayCell.disabled = true;
+                } else {
+                    dayCell.addEventListener('click', function() {
+                        toggleSelected(this);
+                    });
+                }
+
+                calendarDiv.appendChild(dayCell);
+
+                // Move to the next day
+                date.setDate(date.getDate() + 1);
+            }
+        }
+
+        function toggleSelected(element) {
+            element.classList.toggle('selected-date');
+        }
+
+        // Initial rendering when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set the current month as the default value
+            var today = new Date();
+            var currentMonth = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2);
+            document.getElementById('selectedMonth').value = currentMonth;
+
+            renderCalendar();
+        });
+    </script>
 </body>
 </html>
+
+
+
 
 
 
