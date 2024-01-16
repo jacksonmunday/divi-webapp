@@ -18,26 +18,6 @@ else:
     PROFILE_FILE_PATH = 'myapp/profiles.csv'
     USER_DATA_FILE_PATH = 'myapp/user_data_log.csv'
 
-
-class Job:
-
-    def __init__(self, name, description, reward, cooldown_weeks, cooldown_days, cooldown_hours, last_completed):
-        self.name = name
-        self.description = description
-        self.reward = reward
-        self.cooldown_in_hours = int(cooldown_weeks) * 7 * 24 + int(cooldown_days) * 24 + int(cooldown_hours)
-        self.last_completed = last_completed
-
-    def update_last_completed(self):
-        self.last_completed = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-
-
-class Profile:
-    def __init__(self, name):
-        self.name = name
-        self.jobs_completed = None
-
-
 class LogData:
     """
     When this class is called it will log the users data to the data log
