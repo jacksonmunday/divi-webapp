@@ -18,10 +18,12 @@ else:
     PROFILE_FILE_PATH = 'myapp/profiles.csv'
     USER_DATA_FILE_PATH = 'myapp/user_data_log.csv'
 
+
 class LogData:
     """
     When this class is called it will log the users data to the data log
     """
+
     def __init__(self, request):
         self.request = request
         self.update_user_data()
@@ -237,11 +239,12 @@ def sort_by_reward(task_list):
 
 def profiles(request):
     LogData(request)
+    selected_profile = request.session.get('selected_profile', None)
     with open(PROFILE_FILE_PATH, newline='') as csvfile:
         reader = csv.reader(csvfile)
         profiles = next(reader)
 
-    return render(request, 'myapp/profiles.html', {'profiles': profiles})
+    return render(request, 'myapp/profiles.html', {'profiles': profiles, 'selected_profile': selected_profile})
 
 
 def scores(request):

@@ -1,10 +1,9 @@
-<!-- myapp/templates/myapp/profiles.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profiles</title>
+    <title>{% if selected_profile %}{{ selected_profile }}{% else %}Please select a profile{% endif %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'myapp/css/styles.css' %}">
     <style>
@@ -28,25 +27,38 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="center-text">Profiles</h1>
+        <h1 class="center-text">Profile</h1>
 
-        <!-- Display profile buttons -->
-        {% for profile in profiles %}
-            <form method="post" action="{% url 'jobs' %}">
-                {% csrf_token %}
-                <button type="submit" name="selected_profile" value="{{ profile }}" class="big-button">
-                    {{ profile }}
-                </button>
-            </form>
-        {% endfor %}
+        <!-- Display profile dropdown menu -->
+        <form method="post" action="{% url 'jobs' %}" id="profileForm">
+            {% csrf_token %}
+            <select name="selected_profile" class="big-button" onchange="document.getElementById('profileForm').submit();">
+                <option value="" selected disabled>
+                    {% if selected_profile %}
+                        {{ selected_profile }}
+                    {% else %}
+                        Please select a profile
+                    {% endif %}
+                </option>
+                {% for profile in profiles %}
+                    <option value="{{ profile }}">{{ profile }}</option>
+                {% endfor %}
+            </select>
+        </form>
 
         <!-- Navigation Bar -->
         <div class="navigation-bar">
             <a href="{% url 'jobs' %}">Jobs</a>
             <a href="{% url 'scores' %}">Scores</a>
+            <a href="{% url 'profiles' %}">Profiles</a>
         </div>
     </div>
 </body>
 </html>
+
+
+
+
+
 
 
