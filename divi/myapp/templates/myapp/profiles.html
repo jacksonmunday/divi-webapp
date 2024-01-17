@@ -120,49 +120,63 @@
 
 
     <script>
-        function renderCalendar() {
-            var calendarDiv = document.getElementById('calendar');
-            calendarDiv.innerHTML = '';
+    function renderCalendar() {
+        var calendarDiv = document.getElementById('calendar');
+        calendarDiv.innerHTML = '';
 
-            // Get the selected month and year from the input
-            var selectedMonth = document.getElementById('selectedMonth').value || new Date().toISOString().slice(0, 7); // Use current month if not set
-            var date = new Date(selectedMonth + '-01'); // Use the 1st day of the selected month
+        // Get the selected month and year from the input
+        var selectedMonth = document.getElementById('selectedMonth').value || new Date().toISOString().slice(0, 7); // Use current month if not set
+        var date = new Date(selectedMonth + '-01'); // Use the 1st day of the selected month
 
-            // Create a grid of buttons for each day
-            while (date.getMonth() === new Date(selectedMonth + '-01').getMonth()) {
-                var dayCell = document.createElement('button');
-                dayCell.textContent = date.getDate();
+        // Get the selected dates from the Django variable
+        var selectedDates = {{ dates|safe }};
 
-                // Check if the date is in the past
-                if (date < new Date()) {
-                    dayCell.disabled = true;
-                } else {
-                    dayCell.addEventListener('click', function() {
-                        toggleSelected(this);
-                    });
+        // Create a grid of buttons for each day
+        while (date.getMonth() === new Date(selectedMonth + '-01').getMonth()) {
+            var dayCell = document.createElement('button');
+            dayCell.textContent = date.getDate();
+
+            // Check if the date is in the past
+            if (date < new Date()) {
+                dayCell.disabled = true;
+            } else {
+                // Check if the date is in the selected dates array
+                if (selectedDates.includes(formatDate(date))) {
+                    dayCell.classList.add('selected-date');
                 }
 
-                calendarDiv.appendChild(dayCell);
-
-                // Move to the next day
-                date.setDate(date.getDate() + 1);
+                dayCell.addEventListener('click', function() {
+                    toggleSelected(this);
+                });
             }
+
+            calendarDiv.appendChild(dayCell);
+
+            // Move to the next day
+            date.setDate(date.getDate() + 1);
         }
+    }
 
-        function toggleSelected(element) {
-            element.classList.toggle('selected-date');
-        }
+    function toggleSelected(element) {
+        element.classList.toggle('selected-date');
+    }
 
-        // Initial rendering when the page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set the current month as the default value
-            var today = new Date();
-            var currentMonth = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2);
-            document.getElementById('selectedMonth').value = currentMonth;
+    function formatDate(date) {
+        return date.toISOString().slice(0, 10);
+    }
 
-            renderCalendar();
-        });
-    </script>
+    // Initial rendering when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set the current month as the default value
+        var today = new Date();
+        var currentMonth = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2);
+        document.getElementById('selectedMonth').value = currentMonth;
+
+        renderCalendar();
+    });
+</script>
+
+
 </body>
 </html>
 

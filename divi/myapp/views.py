@@ -1,4 +1,6 @@
 # myapp/views.py
+import json
+
 from django.shortcuts import render, redirect
 from django.contrib import messages
 import csv
@@ -12,11 +14,13 @@ if not dev:
     JOBS_LOG_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/jobs_log.csv'
     PROFILE_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/profiles.csv'
     USER_DATA_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/user_data_log.csv'
+    DATES_DATA_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/dates.json'
 else:
     JOBS_FILE_PATH = 'myapp/jobs.csv'
     JOBS_LOG_FILE_PATH = 'myapp/jobs_log.csv'
     PROFILE_FILE_PATH = 'myapp/profiles.csv'
     USER_DATA_FILE_PATH = 'myapp/user_data_log.csv'
+    DATES_DATA_FILE_PATH = 'myapp/dates.json'
 
 
 class LogData:
@@ -237,20 +241,37 @@ def sort_by_reward(task_list):
     return sorted_list
 
 
+def get_dates_for_profile(profile_name):
+    # Load the dates.json file
+    with open(DATES_DATA_FILE_PATH, 'r') as file:
+        data = json.load(file)
+
+    # Check if the provided profile_name is in the JSON data
+    if "profiles" in data and profile_name in data["profiles"]:
+        # Return the list of dates for the specified profile
+        return data["profiles"][profile_name]
+    else:
+        # Return an empty list if the profile is not found
+        return []
+
+
 def profiles(request):
     LogData(request)
     selected_profile = request.session.get('selected_profile', None)
+
     with open(PROFILE_FILE_PATH, newline='') as csvfile:
         reader = csv.reader(csvfile)
         profiles = next(reader)
 
-    return render(request, 'myapp/profiles.html', {'profiles': profiles, 'selected_profile': selected_profile})
+    dates = get_dates_for_profile(str(selected_profile))
+    print(dates)
+
+    return render(request, 'myapp/profiles.html', {'profiles': profiles, 'selected_profile': selected_profile, 'dates': dates})
 
 
 def scores(request):
     LogData(request)
     totals_per_profile = find_totals_per_profile()
-    # print(read_csv_and_transpose())
     return render(request, 'myapp/scores.html', {'totals_per_profile': totals_per_profile})
 
 
