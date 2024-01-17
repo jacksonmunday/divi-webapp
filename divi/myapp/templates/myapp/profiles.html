@@ -85,6 +85,7 @@
             </select>
         </form>
 
+        {% if selected_profile %}
         <h1 class="center-text">Select Dates Away</h1>
 
         <!-- Month selection input -->
@@ -107,6 +108,10 @@
             <!-- Calendar grid -->
             <div id="calendar" class="calendar"></div>
         </div>
+
+                    {% endif %}
+
+
 
         <!-- Navigation Bar -->
         <div class="navigation-bar">
