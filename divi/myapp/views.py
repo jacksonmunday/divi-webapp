@@ -61,14 +61,15 @@ class LogData:
 class Jobs:
 
     def __init__(self):
+        self.file_path = JOBS_FILE_PATH
         self.jobs_list = None
         self.update_jobs_list()
         self.update_job_colour()
-
+        print(self.jobs_list)
 
     def update_jobs_list(self):
         jobs_list = []
-        with open(JOBS_FILE_PATH, newline='') as csvfile:
+        with open(self.file_path, newline='') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 job = Job(row['name'], row['description'], row['reward'], row['cooldown'], row['last_completed'],
@@ -88,6 +89,30 @@ class Jobs:
                 job.colour = 'red'
             else:
                 job.colour = 'normal'
+
+    def update_after_completed(self, job_name):
+        for job in self.jobs_list:
+            if job.name == job_name:
+                job.last_completed = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+                break
+        self.write_jobs_list_to_csv()
+
+    def write_jobs_list_to_csv(self):
+        with open(self.file_path, 'w', newline='') as csvfile:
+            fieldnames = ['name', 'description', 'reward', 'cooldown', 'last_completed', 'one_off']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+            writer.writeheader()
+
+            for job in self.jobs_list:
+                writer.writerow({
+                    'name': job.name,
+                    'description': job.description,
+                    'reward': job.reward,
+                    'cooldown': job.cooldown,
+                    'last_completed': job.last_completed,
+                    'one_off': job.one_off,
+                })
 
     @staticmethod
     def sort_by_reward(jobs_list):
@@ -119,7 +144,7 @@ def complete_job(request):
 
     if selected_job_name:
         # Update jobs.csv
-        update_jobs_csv(selected_job_name)
+        Jobs().update_after_completed(selected_job_name)
 
         # Update jobs log
         update_jobs_log(selected_profile, selected_job_name, date_time_completed)
@@ -276,11 +301,11 @@ def get_job_details(job_name):
 #     return sort_by_reward(jobs_list)
 
 
-def sort_by_reward(task_list):
-    # Use the sorted function to sort the list based on the 'reward' key
-    sorted_list = sorted(task_list, key=lambda x: int(x['reward']))
-
-    return sorted_list
+# def sort_by_reward(task_list):
+#     # Use the sorted function to sort the list based on the 'reward' key
+#     sorted_list = sorted(task_list, key=lambda x: int(x['reward']))
+#
+#     return sorted_list
 
 
 def get_dates_for_profile(profile_name):
@@ -342,7 +367,7 @@ def find_totals_per_profile(file_path=PROFILE_FILE_PATH, jobs_file=JOBS_FILE_PAT
         jobs_reader = csv.reader(jobs_file)
         next(jobs_reader)  # Skip header
         for row in jobs_reader:
-            name, _, reward, _, _ = row
+            name, _, reward, _, _, _ = row
             job_rewards[name] = int(reward)
 
     # Convert the items in each row (excluding the first entry) into rewards

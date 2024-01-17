@@ -2,18 +2,18 @@ name,description,reward,cooldown,last_completed,one_off
 Empty indoor veggie bin,<br>Must be full<br>,1,0,2024_01_17_13_47_03,false
 Empty indoor recycling,<br>Must be full<br>,1,0,2024_01_14_06_32_54,false
 Empty indoor rubbish,<br>Must be full<br>,1,0,2024_01_12_23_56_37,false
+1212,1<br>2<br>,1,193,0001_01_01_00_00_00,
 Empty dishwasher,<br>,2,0,2024_01_14_02_20_40,false
 Wheelie bins,Take out<br>Take back in<br>,2,0,2024_01_10_12_37_27,false
-Vacuum carpet areas    ,Lounge<br>Hallway<br>Indoor toilet<br>Shower room<br>,4,168,2024_01_09_02_01_50,false
-Vacuum wood areas,Lounge\xa0<br>Kitchen<br>Dining area<br>,4,168,2024_01_09_02_01_56,false
+Clean Fireplace ,Empty ashes<br>Vacuum mess<br>,2,168,2023_12_19_22_37_20,
+Vacuum carpet areas    ,Lounge<br>Hallway<br>Indoor toilet<br>Shower room<br>,4,168,2024_01_18_10_56_35,false
+Vacuum wood areas,Lounge\xa0<br>Kitchen<br>Dining area<br>,4,168,2024_01_18_10_57_39,false
+Clean Group towels,Wash them<br>Hang out to dry<br>Take back inside<br>,4,336,2024_01_09_05_15_48,false
+Mow lawns,Back yard<br>Front yard<br>Roadside<br>,5,165,2024_01_09_04_29_11,false
 Clean shower,<br>,6,672,2024_01_09_02_28_27,false
 Clean sinks and toilet,Shower Room sink<br>Toilet Sink<br>Clean toilet<br>Throw out empty rolls<br>,6,336,2024_01_08_23_59_50,false
-Mow lawns,Back yard<br>Front yard<br>Roadside<br>,5,165,2024_01_09_04_29_11,false
-Clean Group towels,Wash them<br>Hang out to dry<br>Take back inside<br>,4,336,2024_01_09_05_15_48,false
-Deep clean rubbish bins,Indoor recycling bin<br>Indoor rubbish bin<br>Indoor veggie bin<br>,10,672,2023_12_19_04_47_53,false
-Kill all driveway weeds,<br>,15,672,2024_01_09_00_07_35,True
-Clean Fireplace ,Empty ashes<br>Vacuum mess<br>,2,168,2023_12_19_22_37_20
 Deep clean kitchen,Clean wall tiles<br>Clean grime from sink<br>Clean windowsill<br>Wipe down cabinet doors<br><br>Clean stove top<br>Move kitchen appliances and clean behind<br><br>,8,504,2023_12_27_22_48_56,True
-Mega weed clean (toby),<br>,30,1680,2024_01_10_12_37_34,True,false
-1212,1<br>2<br>,1,193,0001_01_01_00_00_00
-1212,1<br>,12,193,0001_01_01_00_00_00
+Deep clean rubbish bins,Indoor recycling bin<br>Indoor rubbish bin<br>Indoor veggie bin<br>,10,672,2023_12_19_04_47_53,false
+1212,1<br>,12,193,0001_01_01_00_00_00,
+Kill all driveway weeds,<br>,15,672,2024_01_09_00_07_35,True
+Mega weed clean (toby),<br>,30,1680,2024_01_10_12_37_34,True
