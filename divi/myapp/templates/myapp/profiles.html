@@ -69,7 +69,7 @@
         <h1 class="center-text">Profile</h1>
 
         <!-- Display profile dropdown menu -->
-        <form method="post" action="{% url 'jobs' %}" id="profileForm">
+        <form method="post" action="{% url 'profiles' %}" id="profileForm">
             {% csrf_token %}
             <select name="selected_profile" class="big-button" onchange="document.getElementById('profileForm').submit();">
                 <option value="" selected disabled>
