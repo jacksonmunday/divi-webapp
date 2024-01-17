@@ -36,7 +36,7 @@
         }
 
         .job-button {
-            background-color: {{ job.color }};
+            background-color: {{ job.colour }};
         }
 
         .add-job-button {
@@ -99,7 +99,7 @@
                 <form method="post" action="{% url 'job_details' %}" id="jobForm">
                     {% csrf_token %}
                     {% for job in jobs_list %}
-                        <button type="button" class="big-button job-button" onclick="updateJobDetails('{{ job.name }}')" style="background-color: {{ job.color }}; color: black;">
+                        <button type="button" class="big-button job-button" onclick="updateJobDetails('{{ job.name }}')" style="background-color: {{ job.colour }}; color: black;">
                             {{ job.name }}
                             <div class="reward-box">{{ job.reward }}$</div>
                         </button>

@@ -58,6 +58,58 @@ class LogData:
             writer.writerow(new_log_entry)
 
 
+class Jobs:
+
+    def __init__(self):
+        self.jobs_list = None
+        self.update_jobs_list()
+        self.update_job_colour()
+
+
+    def update_jobs_list(self):
+        jobs_list = []
+        with open(JOBS_FILE_PATH, newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                job = Job(row['name'], row['description'], row['reward'], row['cooldown'], row['last_completed'],
+                          row['one_off'])
+                jobs_list.append(job)
+        self.jobs_list = self.sort_by_reward(jobs_list)
+
+    def update_job_colour(self):
+        # Calculate time difference and update job color
+        for job in self.jobs_list:
+            last_completed_time = datetime.strptime(job.last_completed, "%Y_%m_%d_%H_%M_%S")
+            current_time = datetime.now()
+            time_difference = current_time - last_completed_time
+            cooldown_hours = int(job.cooldown)
+
+            if time_difference.total_seconds() / 3600 < cooldown_hours:
+                job.colour = 'red'
+            else:
+                job.colour = 'normal'
+
+    @staticmethod
+    def sort_by_reward(jobs_list):
+        # Use the sorted function to sort the list based on the 'reward' key
+        sorted_list = sorted(jobs_list, key=lambda x: int(x.reward))
+        return sorted_list
+
+
+class Job:
+    def __init__(self, name, description, reward, cooldown, last_completed, one_off):
+        self.name = name
+        self.description = description
+        self.reward = reward
+        self.cooldown = cooldown
+        self.last_completed = last_completed
+        self.one_off = one_off
+        self.colour = 'normal'
+
+    def print_job(self):
+        print(self.name, self.description, self.reward, self.cooldown, self.last_completed, self.one_off)
+
+
 @require_POST
 def complete_job(request):
     LogData(request)
@@ -143,7 +195,7 @@ def update_profiles_csv(profile_name, job_name):
 def jobs(request):
     LogData(request)
     selected_profile = request.session.get('selected_profile', None)
-    jobs_list = load_jobs()
+    jobs_list = Jobs().jobs_list
 
     if request.method == 'POST':
         selected_profile = request.POST.get('selected_profile', None)
@@ -154,18 +206,6 @@ def jobs(request):
             return redirect('jobs')
         else:
             messages.error(request, 'Please select a valid profile.')
-
-    # Calculate time difference and update job color
-    for job in jobs_list:
-        last_completed_time = datetime.strptime(job['last_completed'], "%Y_%m_%d_%H_%M_%S")
-        current_time = datetime.now()
-        time_difference = current_time - last_completed_time
-        cooldown_hours = int(job['cooldown'])
-
-        if time_difference.total_seconds() / 3600 < cooldown_hours:
-            job['color'] = 'red'
-        else:
-            job['color'] = 'normal'
 
     return render(request, 'myapp/jobs.html', {'selected_profile': selected_profile, 'jobs_list': jobs_list})
 
@@ -225,13 +265,15 @@ def get_job_details(job_name):
     return None
 
 
-def load_jobs():
-    jobs_list = []
-    with open(JOBS_FILE_PATH, newline='') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            jobs_list.append(row)
-    return sort_by_reward(jobs_list)
+# def load_jobs():
+#     jobs_list = []
+#     with open(JOBS_FILE_PATH, newline='') as csvfile:
+#         reader = csv.DictReader(csvfile)
+#         for row in reader:
+#             job = Job(row['name'], row['description'], row['reward'], row['cooldown'], row['last_completed'],
+#                       row['one_off'])
+#             jobs_list.append(job)
+#     return sort_by_reward(jobs_list)
 
 
 def sort_by_reward(task_list):
@@ -266,7 +308,8 @@ def profiles(request):
     dates = get_dates_for_profile(str(selected_profile))
     print(dates)
 
-    return render(request, 'myapp/profiles.html', {'profiles': profiles, 'selected_profile': selected_profile, 'dates': dates})
+    return render(request, 'myapp/profiles.html',
+                  {'profiles': profiles, 'selected_profile': selected_profile, 'dates': dates})
 
 
 def scores(request):
@@ -319,9 +362,9 @@ def find_totals_per_profile(file_path=PROFILE_FILE_PATH, jobs_file=JOBS_FILE_PAT
     return totals_per_profile_with_balance
 
 
-def get_score_details(file_path=PROFILE_FILE_PATH):
+def get_score_details():
     # Read the CSV file
-    with open(file_path, 'r') as file:
+    with open(PROFILE_FILE_PATH, 'r') as file:
         reader = csv.reader(file)
         data = list(reader)
 
@@ -395,9 +438,9 @@ def add_job(request):
     return render(request, 'myapp/add_job.html')  # Render the add_job.html template
 
 
-def get_rewards_per_job_name(job_names, file_path=JOBS_FILE_PATH):
+def get_rewards_per_job_name(job_names):
     # Read the CSV file
-    with open(file_path, 'r') as file:
+    with open(JOBS_FILE_PATH, 'r') as file:
         reader = csv.reader(file)
         data = list(reader)
 
