@@ -30,7 +30,7 @@ None,None,None,None,None,Mow lawns
 Empty dishwasher,None,None,None,None,None
 None,None,None,None,None,Clean sinks and toilet
 None,None,None,Kill all driveway weeds,None,None
-None,None,None,None,None,Vacuum carpet areas    
+None,None,None,None,None,Vacuum carpet areas
 None,None,None,None,None,Vacuum wood areas
 None,None,None,None,Clean shower,None
 None,None,Mow lawns,None,None,None
@@ -52,3 +52,5 @@ None,Empty indoor recycling,None,None,None,None
 None,None,None,Empty indoor veggie bin,None,None
 Vacuum carpet areas    ,None,None,None,None,None
 Vacuum wood areas,None,None,None,None,None
+Empty dishwasher,None,None,None,None,None
+Mow lawns,None,None,None,None,None

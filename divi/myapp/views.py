@@ -1,11 +1,11 @@
-# myapp/views.py
 import json
-
 from django.shortcuts import render, redirect
 from django.contrib import messages
 import csv
 from datetime import datetime
 from django.views.decorators.http import require_POST
+
+# DEVELOPMENT FIELDS ----------------------------------------------------------------------------------------------------
 
 dev = True  # True if running from laptop
 
@@ -23,6 +23,9 @@ else:
     DATES_DATA_FILE_PATH = 'myapp/dates.json'
 
 
+# -----------------------------------------------------------------------------------------------------------------------
+
+
 class LogData:
     """
     When this class is called it will log the users data to the data log
@@ -30,15 +33,14 @@ class LogData:
 
     def __init__(self, request):
         self.request = request
-        self.update_user_data()
+        self.page_view_data_path = USER_DATA_FILE_PATH
+        self.job_complete_data_path = JOBS_LOG_FILE_PATH
 
     def get_client_name(self):
         profile_name = self.request.session.get('selected_profile')
         return profile_name
 
     def update_user_data(self):
-        log_file_path = USER_DATA_FILE_PATH
-
         # Create a new line for the CSV file
         new_log_entry = {
             'ip': self.get_client_name(),
@@ -47,8 +49,28 @@ class LogData:
         }
 
         # Append the new line to the CSV file
-        with open(log_file_path, 'a', newline='') as csvfile:
+        with open(self.page_view_data_path, 'a', newline='') as csvfile:
             fieldnames = ['ip', 'path', 'time']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+            # If the file is empty, write the header
+            if csvfile.tell() == 0:
+                writer.writeheader()
+
+            writer.writerow(new_log_entry)
+
+    def update_jobs_log(self, profile_name, job, date_completed):
+
+        # Create a new line for the CSV file
+        new_log_entry = {
+            'profile_name': profile_name,
+            'job': job,
+            'date_completed': date_completed,
+        }
+
+        # Append the new line to the CSV file
+        with open(self.job_complete_data_path, 'a', newline='') as csvfile:
+            fieldnames = ['profile_name', 'job', 'date_completed']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
             # If the file is empty, write the header
@@ -135,21 +157,24 @@ class Job:
         print(self.name, self.description, self.reward, self.cooldown, self.last_completed, self.one_off)
 
 
+class JobCompleted:
+
+    def __init__(self, job, participants, recipients):
+        self.job = job
+        self.participants = participants
+        self.recipients = recipients
+
+
 @require_POST
 def complete_job(request):
-    LogData(request)
+    LogData(request).update_user_data()
     selected_profile = request.session.get('selected_profile', None)
     selected_job_name = request.POST.get('selected_job_name', None)
     date_time_completed = datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
 
     if selected_job_name:
-        # Update jobs.csv
         Jobs().update_after_completed(selected_job_name)
-
-        # Update jobs log
-        update_jobs_log(selected_profile, selected_job_name, date_time_completed)
-
-        # Update profiles.csv
+        LogData(request).update_jobs_log(selected_profile, selected_job_name, date_time_completed)
         update_profiles_csv(selected_profile, selected_job_name)
 
         messages.success(request, f'Job "{selected_job_name}" completed successfully!')
@@ -157,28 +182,6 @@ def complete_job(request):
         messages.error(request, 'Please select a valid job.')
 
     return redirect('jobs')
-
-
-def update_jobs_log(profile_name, job, date_completed):
-    log_file_path = JOBS_LOG_FILE_PATH  # Replace with the actual path to your CSV file
-
-    # Create a new line for the CSV file
-    new_log_entry = {
-        'profile_name': profile_name,
-        'job': job,
-        'date_completed': date_completed,
-    }
-
-    # Append the new line to the CSV file
-    with open(log_file_path, 'a', newline='') as csvfile:
-        fieldnames = ['profile_name', 'job', 'date_completed']
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-        # If the file is empty, write the header
-        if csvfile.tell() == 0:
-            writer.writeheader()
-
-        writer.writerow(new_log_entry)
 
 
 def update_jobs_csv(job_name):
@@ -218,7 +221,7 @@ def update_profiles_csv(profile_name, job_name):
 
 
 def jobs(request):
-    LogData(request)
+    LogData(request).update_user_data()
     selected_profile = request.session.get('selected_profile', None)
     jobs_list = Jobs().jobs_list
 
@@ -236,7 +239,7 @@ def jobs(request):
 
 
 def job_details(request):
-    LogData(request)
+    LogData(request).update_user_data()
     selected_job_name = request.POST.get('selected_job_name', None)
 
     if request.method == 'POST':
@@ -323,7 +326,7 @@ def get_dates_for_profile(profile_name):
 
 
 def profiles(request):
-    LogData(request)
+    LogData(request).update_user_data()
     selected_profile = request.session.get('selected_profile', None)
 
     with open(PROFILE_FILE_PATH, newline='') as csvfile:
@@ -338,7 +341,7 @@ def profiles(request):
 
 
 def scores(request):
-    LogData(request)
+    LogData(request).update_user_data()
     totals_per_profile = find_totals_per_profile()
     return render(request, 'myapp/scores.html', {'totals_per_profile': totals_per_profile})
 
@@ -400,7 +403,7 @@ def get_score_details():
 
 
 def scores_details(request, selected_profile):
-    LogData(request)
+    LogData(request).update_user_data()
     score_details = get_score_details()
 
     # Find the score details for the selected profile
@@ -436,7 +439,7 @@ def calculate_balance(totals_per_profile):
 
 
 def add_job(request):
-    LogData(request)
+    LogData(request).update_user_data()
     if request.method == 'POST':
         name = request.POST.get('name')
 
