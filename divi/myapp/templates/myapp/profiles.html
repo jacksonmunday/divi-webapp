@@ -68,6 +68,11 @@
     <div class="container">
         <h1 class="center-text">Profile</h1>
 
+<!-- Display add profile button -->
+<button class="big-button" onclick="window.location.href='{% url 'add_profile' %}'">Add Profile</button>
+
+
+
         <!-- Display profile dropdown menu -->
         <form method="post" action="{% url 'jobs' %}" id="profileForm">
             {% csrf_token %}

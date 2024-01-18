@@ -5,6 +5,7 @@ import csv
 from datetime import datetime
 from django.views.decorators.http import require_POST
 
+
 # DEVELOPMENT FIELDS ---------------------------------------------------------------------------------------------------
 
 dev = True  # True if running from laptop
@@ -25,6 +26,20 @@ else:
 
 # ----------------------------------------------------------------------------------------------------------------------
 
+
+def add_profile(request):
+    if request.method == 'POST':
+        profile_name = request.POST.get('profile_name')
+
+        if profile_name:
+            # Process the profile name (e.g., print to the terminal)
+            print(f'Added profile: {profile_name}')
+            messages.success(request, f'Profile "{profile_name}" added successfully!')
+            return redirect('profiles')  # Redirect to profiles page after adding the profile
+        else:
+            messages.error(request, 'Invalid form submission. Please try again.')
+
+    return render(request, 'myapp/add_profile.html')
 
 class LogData:
     """
@@ -183,14 +198,50 @@ class JobCompleted:
         self.recipients = recipients
 
 
-class Profile:
+class Profiles:
 
+    def __init__(self):
+        self.profiles_file_path = PROFILE_FILE_PATH
+        self.profiles_list = None
+
+    def create_profile(self, name):
+        # Create a new profile object with the given name
+        new_profile = Profile(name)
+        self.save_new_profile_to_json(new_profile)
+
+    def save_new_profile_to_json(self, profile_object):
+        try:
+            # Load existing profiles from the file
+            with open(self.profiles_file_path, 'r') as json_file:
+                existing_data = json.load(json_file)
+        except FileNotFoundError:
+            # If the file doesn't exist yet, initialize with an empty list
+            existing_data = []
+
+        # Convert the profile object to a dictionary
+        profile_dict = {
+            "name": profile_object.name,
+            "completed_jobs": profile_object.completed_jobs,
+            "dates": profile_object.dates
+        }
+
+        # Append the new profile to the existing data
+        existing_data.append(profile_dict)
+
+        # Save the updated data to the JSON file
+        with open(self.profiles_file_path, 'w') as json_file:
+            json.dump(existing_data, json_file, indent=2)
+
+
+class Profile:
     def __init__(self, name):
         self.name = name
-        self.completed_jobs = None
-        self.dates = None
+        self.completed_jobs = []
+        self.dates = []
+
         self.current_rewards = None
         self.current_balance = None
+
 
 
 @require_POST

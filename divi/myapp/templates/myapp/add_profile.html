@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Profile</title>
+    <!-- Add your CSS styles if needed -->
+</head>
+<body>
+    <div class="container">
+        <h1 class="center-text">Add Profile</h1>
+
+        <!-- Form for adding a profile -->
+        <form method="post" action="{% url 'add_profile' %}">
+            {% csrf_token %}
+            <label for="profile_name">Profile Name:</label>
+            <input type="text" name="profile_name" required>
+
+            <!-- Add any additional input fields as needed -->
+
+            <button type="submit">Add Profile</button>
+        </form>
+
+        <!-- Navigation Bar -->
+        <div class="navigation-bar">
+            <a href="{% url 'profiles' %}">Back to Profiles</a>
+            <!-- Add other navigation links if needed -->
+        </div>
+    </div>
+</body>
+</html>
