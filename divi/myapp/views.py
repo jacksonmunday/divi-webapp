@@ -5,7 +5,7 @@ import csv
 from datetime import datetime
 from django.views.decorators.http import require_POST
 
-# DEVELOPMENT FIELDS ----------------------------------------------------------------------------------------------------
+# DEVELOPMENT FIELDS ---------------------------------------------------------------------------------------------------
 
 dev = True  # True if running from laptop
 
@@ -23,7 +23,7 @@ else:
     DATES_DATA_FILE_PATH = 'myapp/dates.json'
 
 
-# -----------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
 
 
 class LogData:
@@ -99,6 +99,12 @@ class Jobs:
                 jobs_list.append(job)
         self.jobs_list = self.sort_by_reward(jobs_list)
 
+    def get_job_details(self, searching_job_name):
+        for job in self.jobs_list:
+            if job.name == searching_job_name:
+                return job
+        return None
+
     def update_job_colour(self):
         # Calculate time difference and update job color
         for job in self.jobs_list:
@@ -113,6 +119,11 @@ class Jobs:
                 job.colour = 'normal'
 
     def update_after_completed(self, job_name):
+        """
+        Updates the jobs.csv with the correct last comeplted datte
+        :param job_name: name of the job string
+        :return: none
+        """
         for job in self.jobs_list:
             if job.name == job_name:
                 job.last_completed = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
@@ -151,18 +162,35 @@ class Job:
         self.cooldown = cooldown
         self.last_completed = last_completed
         self.one_off = one_off
+
         self.colour = 'normal'
+        self.cooldown_formatted = None
+        self.time_since_last_complete = None
+        self.show_complete_button = None
 
     def print_job(self):
         print(self.name, self.description, self.reward, self.cooldown, self.last_completed, self.one_off)
 
 
 class JobCompleted:
+    """
+    Object for a completed job
+    """
 
     def __init__(self, job, participants, recipients):
         self.job = job
         self.participants = participants
         self.recipients = recipients
+
+
+class Profile:
+
+    def __init__(self, name):
+        self.name = name
+        self.completed_jobs = None
+        self.dates = None
+        self.current_rewards = None
+        self.current_balance = None
 
 
 @require_POST
@@ -184,21 +212,21 @@ def complete_job(request):
     return redirect('jobs')
 
 
-def update_jobs_csv(job_name):
-    # Update jobs.csv with the current date and time
-    with open(JOBS_FILE_PATH, 'r', newline='') as csvfile:
-        jobs_list = list(csv.DictReader(csvfile))
-
-    for job in jobs_list:
-        if job['name'] == job_name:
-            job['last_completed'] = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-            break
-
-    with open(JOBS_FILE_PATH, 'w', newline='') as csvfile:
-        fieldnames = jobs_list[0].keys()
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(jobs_list)
+# def update_jobs_csv(job_name):
+#     # Update jobs.csv with the current date and time
+#     with open(JOBS_FILE_PATH, 'r', newline='') as csvfile:
+#         jobs_list = list(csv.DictReader(csvfile))
+#
+#     for job in jobs_list:
+#         if job['name'] == job_name:
+#             job['last_completed'] = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+#             break
+#
+#     with open(JOBS_FILE_PATH, 'w', newline='') as csvfile:
+#         fieldnames = jobs_list[0].keys()
+#         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+#         writer.writeheader()
+#         writer.writerows(jobs_list)
 
 
 def update_profiles_csv(profile_name, job_name):
@@ -247,13 +275,13 @@ def job_details(request):
             return complete_job(request)
 
     if selected_job_name:
-        selected_job_details = get_job_details(selected_job_name)
+        job = Jobs().get_job_details(selected_job_name)
 
         # Convert cooldown from hours to weeks, days, and hours
-        selected_job_details['cooldown_formatted'] = convert_cooldown(selected_job_details['cooldown'])
+        job.cooldown_formatted = convert_cooldown(job.cooldown)
 
         # Calculate and display "Time since last complete"
-        last_completed_time = datetime.strptime(selected_job_details['last_completed'], "%Y_%m_%d_%H_%M_%S")
+        last_completed_time = datetime.strptime(job.last_completed, "%Y_%m_%d_%H_%M_%S")
         current_time = datetime.now()
         time_difference = current_time - last_completed_time
 
@@ -262,12 +290,12 @@ def job_details(request):
         days = time_difference.days % 7
         hours, remainder = divmod(time_difference.seconds, 3600)
 
-        selected_job_details['time_since_last_complete'] = f"{weeks} weeks, {days} days, {hours} hours"
+        job.time_since_last_complete = f"{weeks} weeks, {days} days, {hours} hours"
 
         # Check if the "Complete" button should be shown
-        selected_job_details['show_complete_button'] = show_complete_button(selected_job_details)
+        job.show_complete_button = show_complete_button(job)
 
-        return render(request, 'myapp/job_details.html', {'selected_job_details': selected_job_details})
+        return render(request, 'myapp/job_details.html', {'selected_job_details': job})
     else:
         messages.error(request, 'Please select a valid job.')
 
@@ -284,13 +312,13 @@ def convert_cooldown(cooldown):
     return f"{weeks} weeks, {days} days, {hours} hours"
 
 
-def get_job_details(job_name):
-    with open(JOBS_FILE_PATH, newline='') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            if row['name'] == job_name:
-                return row
-    return None
+# def get_job_details(job_name):
+#     with open(JOBS_FILE_PATH, newline='') as csvfile:
+#         reader = csv.DictReader(csvfile)
+#         for row in reader:
+#             if row['name'] == job_name:
+#                 return row
+#     return None
 
 
 # def load_jobs():
@@ -347,10 +375,10 @@ def scores(request):
 
 
 def show_complete_button(selected_job_details):
-    last_completed_time = datetime.strptime(selected_job_details['last_completed'], "%Y_%m_%d_%H_%M_%S")
+    last_completed_time = datetime.strptime(selected_job_details.last_completed, "%Y_%m_%d_%H_%M_%S")
     current_time = datetime.now()
     time_difference = current_time - last_completed_time
-    cooldown_hours = int(selected_job_details['cooldown'])
+    cooldown_hours = int(selected_job_details.cooldown)
 
     return time_difference.total_seconds() / 3600 > cooldown_hours
 
