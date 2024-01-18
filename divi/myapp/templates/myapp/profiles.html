@@ -7,6 +7,27 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'myapp/css/styles.css' %}">
     <style>
+        /* Your existing styles here */
+
+        /* Updated styles for the add-profile button */
+        .add-profile-button {
+            background-color: #3498db; /* Set the background color to a lighter blue */
+            color: #fff;
+            width: 100%;
+            padding: 15px; /* Adjust the padding as needed */
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin: 10px 0; /* Add some margin */
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+        }
+
+        .add-profile-button:hover {
+            background-color: #2980b9; /* Change the background color on hover if needed */
+        }
+
+        /* Updated styles for the big-button */
         .big-button {
             font-size: 1.2em;
             padding: 8px;
@@ -68,10 +89,8 @@
     <div class="container">
         <h1 class="center-text">Profile</h1>
 
-<!-- Display add profile button -->
-<button class="big-button" onclick="window.location.href='{% url 'add_profile' %}'">Add Profile</button>
-
-
+        <!-- Display add profile button -->
+        <button class="add-profile-button" onclick="window.location.href='{% url 'add_profile' %}'">Add Profile</button>
 
         <!-- Display profile dropdown menu -->
         <form method="post" action="{% url 'jobs' %}" id="profileForm">
@@ -91,29 +110,24 @@
         </form>
 
         {% if selected_profile %}
-        <h1 class="center-text">Select Dates Away</h1>
+            <h1 class="center-text">Select Dates Away</h1>
 
-        <!-- Month selection input -->
-        <label for="selectedMonth">Select a month:</label>
-        <input type="month" id="selectedMonth" onchange="renderCalendar()" value="{{ current_month }}">
+            <!-- Month selection input -->
+            <label for="selectedMonth">Select a month:</label>
+            <input type="month" id="selectedMonth" onchange="renderCalendar()" value="{{ current_month }}">
 
-        <!-- Calendar container -->
-        <div class="calendar-container">
-
-            <!-- Calendar grid -->
-            <div id="calendar" class="calendar"></div>
-        </div>
-
-                    {% endif %}
-
-
+            <!-- Calendar container -->
+            <div class="calendar-container">
+                <!-- Calendar grid -->
+                <div id="calendar" class="calendar"></div>
+            </div>
+        {% endif %}
 
         <!-- Navigation Bar -->
         <div class="navigation-bar">
             <a href="{% url 'profiles' %}">Profile</a>
             <a href="{% url 'jobs' %}">Jobs</a>
             <a href="{% url 'scores' %}">Scores</a>
-
         </div>
     </div>
 

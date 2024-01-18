@@ -5,7 +5,6 @@ import csv
 from datetime import datetime
 from django.views.decorators.http import require_POST
 
-
 # DEVELOPMENT FIELDS ---------------------------------------------------------------------------------------------------
 
 dev = True  # True if running from laptop
@@ -25,21 +24,6 @@ else:
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-
-
-def add_profile(request):
-    if request.method == 'POST':
-        profile_name = request.POST.get('profile_name')
-
-        if profile_name:
-            # Process the profile name (e.g., print to the terminal)
-            print(f'Added profile: {profile_name}')
-            messages.success(request, f'Profile "{profile_name}" added successfully!')
-            return redirect('profiles')  # Redirect to profiles page after adding the profile
-        else:
-            messages.error(request, 'Invalid form submission. Please try again.')
-
-    return render(request, 'myapp/add_profile.html')
 
 class LogData:
     """
@@ -102,7 +86,6 @@ class Jobs:
         self.jobs_list = None
         self.update_jobs_list()
         self.update_job_colour()
-        print(self.jobs_list)
 
     def update_jobs_list(self):
         jobs_list = []
@@ -198,39 +181,57 @@ class JobCompleted:
         self.recipients = recipients
 
 
-class Profiles:
 
+class Profiles:
     def __init__(self):
-        self.profiles_file_path = PROFILE_FILE_PATH
+        self.profiles_file_path = 'myapp/profiles.json'
         self.profiles_list = None
+        self.load_profiles_from_json()
 
     def create_profile(self, name):
-        # Create a new profile object with the given name
-        new_profile = Profile(name)
-        self.save_new_profile_to_json(new_profile)
+        # Convert name to lowercase for case-insensitive comparison
+        name_lower = name.lower()
+
+        # Check if the profile already exists
+        if not any(profile.name.lower() == name_lower for profile in self.profiles_list):
+            new_profile = Profile(name)
+            self.save_new_profile_to_json(new_profile)
+            self.load_profiles_from_json()
+        else:
+            print(f"Profile with name '{name}' already exists.")
 
     def save_new_profile_to_json(self, profile_object):
         try:
-            # Load existing profiles from the file
             with open(self.profiles_file_path, 'r') as json_file:
                 existing_data = json.load(json_file)
-        except FileNotFoundError:
-            # If the file doesn't exist yet, initialize with an empty list
+        except (FileNotFoundError, json.JSONDecodeError):
             existing_data = []
 
-        # Convert the profile object to a dictionary
         profile_dict = {
             "name": profile_object.name,
             "completed_jobs": profile_object.completed_jobs,
             "dates": profile_object.dates
         }
 
-        # Append the new profile to the existing data
         existing_data.append(profile_dict)
 
-        # Save the updated data to the JSON file
         with open(self.profiles_file_path, 'w') as json_file:
             json.dump(existing_data, json_file, indent=2)
+
+    def load_profiles_from_json(self):
+        self.profiles_list = []
+
+        try:
+            with open(self.profiles_file_path, 'r') as json_file:
+                data = json.load(json_file)
+                for entry in data:
+                    profile = Profile(entry['name'])
+                    profile.completed_jobs = entry['completed_jobs']
+                    profile.dates = entry['dates']
+                    self.profiles_list.append(profile)
+        except (FileNotFoundError, json.JSONDecodeError):
+            # Handle the case when the file is not found or cannot be decoded
+            pass
 
 
 class Profile:
@@ -241,7 +242,6 @@ class Profile:
 
         self.current_rewards = None
         self.current_balance = None
-
 
 
 @require_POST
@@ -564,3 +564,18 @@ def get_rewards_per_job_name(job_names):
     rewards_list = [job_rewards.get(job_name, 0) for job_name in job_names]
 
     return rewards_list
+
+
+def add_profile(request):
+    if request.method == 'POST':
+        profile_name = request.POST.get('profile_name')
+
+        if profile_name:
+            Profiles().create_profile(request.POST.get('profile_name'))
+
+            messages.success(request, f'Profile "{profile_name}" added successfully!')
+            return redirect('profiles')  # Redirect to profiles page after adding the profile
+        else:
+            messages.error(request, 'Invalid form submission. Please try again.')
+
+    return render(request, 'myapp/add_profile.html')
