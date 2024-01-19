@@ -37,6 +37,16 @@ class Utils:
     def get_date_time():
         return datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 
+    @staticmethod
+    def convert_cooldown(cooldown):
+        # Convert cooldown from hours to weeks, days, and hours
+        cooldown = int(cooldown)
+        weeks = cooldown // (7 * 24)
+        days = (cooldown % (7 * 24)) // 24
+        hours = cooldown % 24
+
+        return f"{weeks} weeks, {days} days, {hours} hours"
+
 
 class LogData:
     """
@@ -183,7 +193,56 @@ class Job:
         print(self.name, self.description, self.reward, self.cooldown, self.last_completed, self.one_off)
 
 
-class JobCompleted:
+class CompletedJobs:
+
+    def __init__(self):
+        self.file_path = COMPLETED_JOBS_DATA_FILE_PATH
+        self.complete_jobs_list = None
+        self.update_complete_jobs_list()
+
+    def update_complete_jobs_list(self):
+        self.complete_jobs_list = self.load_json()
+
+    def add_to_json(self, completed_job):
+        try:
+            with open(self.file_path, 'r') as file:
+                existing_data = json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            existing_data = []
+
+        # Append new completed job data
+        new_completed_job = {
+            "job": {
+                "name": completed_job.job.name,
+                "description": completed_job.job.description,
+                "reward": completed_job.job.reward,
+                "cooldown": completed_job.job.cooldown,
+                "last_completed": completed_job.job.last_completed,
+                "one_off": completed_job.job.one_off,
+                "colour": completed_job.job.colour
+            },
+            "participants": completed_job.participants,
+            "who_pays": completed_job.who_pays,
+        }
+
+        existing_data.append(new_completed_job)
+
+        # Save updated JSON back to the file
+        with open(self.file_path, 'w') as file:
+            json.dump(existing_data, file, indent=2)
+
+        self.update_complete_jobs_list()
+
+    def load_json(self):
+        try:
+            with open(self.file_path, 'r') as file:
+                completed_jobs_data = json.load(file)
+                return [CompletedJob.from_json_data(job_data) for job_data in completed_jobs_data]
+        except (FileNotFoundError, json.JSONDecodeError):
+            return []
+
+
+class CompletedJob:
     """
     Object for a completed job
     """
@@ -199,33 +258,20 @@ class JobCompleted:
         print(self.participants)
         print(self.who_pays)
 
-    def to_json(self):
-        try:
-            with open(self.file_path, 'r') as file:
-                existing_data = json.load(file)
-        except (FileNotFoundError, json.JSONDecodeError):
-            existing_data = []
-
-        # Append new completed job data
-        new_completed_job = {
-            "job": {
-                "name": self.job.name,
-                "description": self.job.description,
-                "reward": self.job.reward,
-                "cooldown": self.job.cooldown,
-                "last_completed": self.job.last_completed,
-                "one_off": self.job.one_off,
-                "colour": self.job.colour
-            },
-            "participants": self.participants,
-            "who_pays": self.who_pays,
-        }
-
-        existing_data.append(new_completed_job)
-
-        # Save updated JSON back to the file
-        with open(self.file_path, 'w') as file:
-            json.dump(existing_data, file, indent=2)
+    @classmethod
+    def from_json_data(cls, json_data):
+        job_data = json_data.get("job", {})
+        job = Job(
+            job_data.get("name", ""),
+            job_data.get("description", ""),
+            job_data.get("reward", ""),
+            job_data.get("cooldown", ""),
+            job_data.get("last_completed", ""),
+            job_data.get("one_off", ""),
+        )
+        participants = json_data.get("participants", [])
+        who_pays = json_data.get("who_pays", [])
+        return cls(job, participants, who_pays)
 
 
 class Profiles:
@@ -305,32 +351,16 @@ def complete_job(request):
         Jobs().update_after_completed(selected_job_name)
         LogData(request).update_jobs_log(selected_profile, selected_job_name, date_time_completed)
         job_object = Jobs().get_job_details(selected_job_name)
-        JobCompleted(job=job_object,
-                     participants=[selected_profile],
-                     who_pays=Profiles().list_of_names).to_json()
+        completed_job_object = CompletedJob(job=job_object,
+                                            participants=[selected_profile],
+                                            who_pays=Profiles().list_of_names)
+        CompletedJobs().add_to_json(completed_job_object)
 
         messages.success(request, f'Job "{selected_job_name}" completed successfully!')
     else:
         messages.error(request, 'Please select a valid job.')
 
     return redirect('jobs')
-
-
-# def update_jobs_csv(job_name):
-#     # Update jobs.csv with the current date and time
-#     with open(JOBS_FILE_PATH, 'r', newline='') as csvfile:
-#         jobs_list = list(csv.DictReader(csvfile))
-#
-#     for job in jobs_list:
-#         if job['name'] == job_name:
-#             job['last_completed'] = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-#             break
-#
-#     with open(JOBS_FILE_PATH, 'w', newline='') as csvfile:
-#         fieldnames = jobs_list[0].keys()
-#         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-#         writer.writeheader()
-#         writer.writerows(jobs_list)
 
 
 def update_profiles_csv(profile_name, job_name):
@@ -382,7 +412,7 @@ def job_details(request):
         job = Jobs().get_job_details(selected_job_name)
 
         # Convert cooldown from hours to weeks, days, and hours
-        job.cooldown_formatted = convert_cooldown(job.cooldown)
+        job.cooldown_formatted = Utils().convert_cooldown(job.cooldown)
 
         # Calculate and display "Time since last complete"
         last_completed_time = datetime.strptime(job.last_completed, "%Y_%m_%d_%H_%M_%S")
@@ -404,16 +434,6 @@ def job_details(request):
         messages.error(request, 'Please select a valid job.')
 
     return redirect('jobs')
-
-
-def convert_cooldown(cooldown):
-    # Convert cooldown from hours to weeks, days, and hours
-    cooldown = int(cooldown)
-    weeks = cooldown // (7 * 24)
-    days = (cooldown % (7 * 24)) // 24
-    hours = cooldown % 24
-
-    return f"{weeks} weeks, {days} days, {hours} hours"
 
 
 # def get_job_details(job_name):
