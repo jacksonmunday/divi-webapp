@@ -15,15 +15,28 @@ if not dev:
     PROFILE_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/profiles.csv'
     USER_DATA_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/user_data_log.csv'
     DATES_DATA_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/dates.json'
+    COMPLETED_JOBS_DATA_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/completed_jobs.json'
 else:
     JOBS_FILE_PATH = 'myapp/jobs.csv'
     JOBS_LOG_FILE_PATH = 'myapp/jobs_log.csv'
     PROFILE_FILE_PATH = 'myapp/profiles.csv'
     USER_DATA_FILE_PATH = 'myapp/user_data_log.csv'
     DATES_DATA_FILE_PATH = 'myapp/dates.json'
+    COMPLETED_JOBS_DATA_FILE_PATH = 'myapp/completed_jobs.json'
 
 
 # ----------------------------------------------------------------------------------------------------------------------
+
+
+class Utils:
+
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def get_date_time():
+        return datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+
 
 class LogData:
     """
@@ -44,7 +57,7 @@ class LogData:
         new_log_entry = {
             'ip': self.get_client_name(),
             'path': self.request.path_info,
-            'time': datetime.now().strftime('%Y_%m_%d_%H_%M_%S'),
+            'time': Utils.get_date_time(),
         }
 
         # Append the new line to the CSV file
@@ -124,7 +137,7 @@ class Jobs:
         """
         for job in self.jobs_list:
             if job.name == job_name:
-                job.last_completed = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+                job.last_completed = Utils.get_date_time()
                 break
         self.write_jobs_list_to_csv()
 
@@ -175,28 +188,61 @@ class JobCompleted:
     Object for a completed job
     """
 
-    def __init__(self, job, participants, recipients):
+    def __init__(self, job, participants, who_pays):
         self.job = job
         self.participants = participants
-        self.recipients = recipients
+        self.who_pays = who_pays
+        self.file_path = COMPLETED_JOBS_DATA_FILE_PATH
 
+    def print_all(self):
+        print(self.job)
+        print(self.participants)
+        print(self.who_pays)
+
+    def to_json(self):
+        try:
+            with open(self.file_path, 'r') as file:
+                existing_data = json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            existing_data = []
+
+        # Append new completed job data
+        new_completed_job = {
+            "job": {
+                "name": self.job.name,
+                "description": self.job.description,
+                "reward": self.job.reward,
+                "cooldown": self.job.cooldown,
+                "last_completed": self.job.last_completed,
+                "one_off": self.job.one_off,
+                "colour": self.job.colour
+            },
+            "participants": self.participants,
+            "who_pays": self.who_pays,
+        }
+
+        existing_data.append(new_completed_job)
+
+        # Save updated JSON back to the file
+        with open(self.file_path, 'w') as file:
+            json.dump(existing_data, file, indent=2)
 
 
 class Profiles:
     def __init__(self):
         self.profiles_file_path = 'myapp/profiles.json'
-        self.profiles_list = None
-        self.load_profiles_from_json()
+        self.list_of_objects = self.load_profiles_from_json()  # Loaded everytime an object is made
+        self.list_of_names = self.get_profile_names_list()
 
     def create_profile(self, name):
         # Convert name to lowercase for case-insensitive comparison
         name_lower = name.lower()
 
         # Check if the profile already exists
-        if not any(profile.name.lower() == name_lower for profile in self.profiles_list):
+        if not any(profile.name.lower() == name_lower for profile in self.list_of_objects):
             new_profile = Profile(name)
             self.save_new_profile_to_json(new_profile)
-            self.load_profiles_from_json()
+            self.load_profiles_from_json()  # reload list when new profile added
         else:
             print(f"Profile with name '{name}' already exists.")
 
@@ -209,7 +255,6 @@ class Profiles:
 
         profile_dict = {
             "name": profile_object.name,
-            "completed_jobs": profile_object.completed_jobs,
             "dates": profile_object.dates
         }
 
@@ -218,26 +263,31 @@ class Profiles:
         with open(self.profiles_file_path, 'w') as json_file:
             json.dump(existing_data, json_file, indent=2)
 
-    def load_profiles_from_json(self):
-        self.profiles_list = []
+    def get_profile_names_list(self):
+        new_list = []
+        for profile in self.list_of_objects:
+            new_list.append(profile.name)
+        return new_list
 
+    def load_profiles_from_json(self):
+        profiles_list = []
         try:
             with open(self.profiles_file_path, 'r') as json_file:
                 data = json.load(json_file)
                 for entry in data:
                     profile = Profile(entry['name'])
-                    profile.completed_jobs = entry['completed_jobs']
                     profile.dates = entry['dates']
-                    self.profiles_list.append(profile)
+                    profiles_list.append(profile)
         except (FileNotFoundError, json.JSONDecodeError):
             # Handle the case when the file is not found or cannot be decoded
             pass
+
+        return profiles_list
 
 
 class Profile:
     def __init__(self, name):
         self.name = name
-        self.completed_jobs = []
         self.dates = []
 
         self.current_rewards = None
@@ -249,12 +299,15 @@ def complete_job(request):
     LogData(request).update_user_data()
     selected_profile = request.session.get('selected_profile', None)
     selected_job_name = request.POST.get('selected_job_name', None)
-    date_time_completed = datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+    date_time_completed = Utils.get_date_time()
 
     if selected_job_name:
         Jobs().update_after_completed(selected_job_name)
         LogData(request).update_jobs_log(selected_profile, selected_job_name, date_time_completed)
-        update_profiles_csv(selected_profile, selected_job_name)
+        job_object = Jobs().get_job_details(selected_job_name)
+        JobCompleted(job=job_object,
+                     participants=[selected_profile],
+                     who_pays=Profiles().list_of_names).to_json()
 
         messages.success(request, f'Job "{selected_job_name}" completed successfully!')
     else:
@@ -572,6 +625,7 @@ def add_profile(request):
 
         if profile_name:
             Profiles().create_profile(request.POST.get('profile_name'))
+            print(Profiles().list_of_names)
 
             messages.success(request, f'Profile "{profile_name}" added successfully!')
             return redirect('profiles')  # Redirect to profiles page after adding the profile

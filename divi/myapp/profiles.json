@@ -1,12 +1,26 @@
 [
   {
-    "name": "jackson",
-    "completed_jobs": [],
+    "name": "Jackson",
     "dates": []
   },
   {
-    "name": "help",
-    "completed_jobs": [],
+    "name": "Olaf",
+    "dates": []
+  },
+  {
+    "name": "Dan",
+    "dates": []
+  },
+  {
+    "name": "Brie",
+    "dates": []
+  },
+  {
+    "name": "Kelsey",
+    "dates": []
+  },
+  {
+    "name": "Toby",
     "dates": []
   }
 ]
