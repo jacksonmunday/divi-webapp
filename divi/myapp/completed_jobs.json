@@ -108,5 +108,28 @@
       "Kelsey",
       "Toby"
     ]
+  },
+  {
+    "job": {
+      "name": "Empty indoor rubbish",
+      "description": "<br>Must be full<br>",
+      "reward": "1",
+      "cooldown": "0",
+      "last_completed": "2024_01_21_11_45_39",
+      "one_off": "false",
+      "colour": "normal"
+    },
+    "participants": [
+      "Kelsey"
+    ],
+    "who_pays": [
+      "Jackson",
+      "Olaf",
+      "Dan",
+      "Brie",
+      "Kelsey",
+      "Toby",
+      "Nig"
+    ]
   }
 ]

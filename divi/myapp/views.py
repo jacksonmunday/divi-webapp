@@ -278,7 +278,7 @@ class Profiles:
     def __init__(self):
         self.profiles_file_path = 'myapp/profiles.json'
         self.list_of_objects = self.load_profiles_from_json()  # Loaded everytime an object is made
-        self.list_of_names = self.get_profile_names_list()
+        self.list_of_strings = self.get_profile_names_list()
 
     def create_profile(self, name):
         # Convert name to lowercase for case-insensitive comparison
@@ -330,14 +330,39 @@ class Profiles:
 
         return profiles_list
 
+    def get_profile_by_name(self, name):
+        # Convert name to lowercase for case-insensitive comparison
+        name_lower = name.lower()
+
+        # Find the profile with the given name
+        for profile in self.list_of_objects:
+            if profile.name.lower() == name_lower:
+                return profile
+
+        # If the profile is not found, return None
+        print(f"Profile with name '{name}' not found.")
+        return None
+
 
 class Profile:
     def __init__(self, name):
         self.name = name
         self.dates = []
 
-        self.current_rewards = None
+        self.current_rewards = self.get_current_rewards()
         self.current_balance = None
+
+    def get_current_rewards(self):
+        rewards = 0
+        completed_jobs = CompletedJobs().complete_jobs_list
+        for completed_job in completed_jobs:
+            for participant in completed_job.participants:
+                if participant.lower() == self.name.lower():
+                    rewards += int(completed_job.job.reward)/len(completed_job.participants)
+        return rewards
+
+
+
 
 
 @require_POST
@@ -353,7 +378,7 @@ def complete_job(request):
         job_object = Jobs().get_job_details(selected_job_name)
         completed_job_object = CompletedJob(job=job_object,
                                             participants=[selected_profile],
-                                            who_pays=Profiles().list_of_names)
+                                            who_pays=Profiles().list_of_strings)
         CompletedJobs().add_to_json(completed_job_object)
 
         messages.success(request, f'Job "{selected_job_name}" completed successfully!')
@@ -382,15 +407,17 @@ def complete_job(request):
 #         writer.writerow(new_profile_line)
 
 
-def jobs(request): #GOOD
+def jobs(request):  # GOOD
     LogData(request).update_user_data()
     selected_profile = request.session.get('selected_profile', None)
     jobs_list = Jobs().jobs_list
 
     if request.method == 'POST':
         selected_profile = request.POST.get('selected_profile', None)
+        print(type(selected_profile))
 
         if selected_profile:
+
             request.session['selected_profile'] = selected_profile
             messages.success(request, f'Profile "{selected_profile}" selected successfully!')
             return redirect('jobs')
@@ -400,7 +427,7 @@ def jobs(request): #GOOD
     return render(request, 'myapp/jobs.html', {'selected_profile': selected_profile, 'jobs_list': jobs_list})
 
 
-def job_details(request): #GOOD
+def job_details(request):  # GOOD
     LogData(request).update_user_data()
     selected_job_name = request.POST.get('selected_job_name', None)
 
@@ -463,33 +490,29 @@ def job_details(request): #GOOD
 #     return sorted_list
 
 
-def get_dates_for_profile(profile_name):
-    # Load the dates.json file
-    with open(DATES_DATA_FILE_PATH, 'r') as file:
-        data = json.load(file)
-
-    # Check if the provided profile_name is in the JSON data
-    if "profiles" in data and profile_name in data["profiles"]:
-        # Return the list of dates for the specified profile
-        return data["profiles"][profile_name]
-    else:
-        # Return an empty list if the profile is not found
-        return []
+# def get_dates_for_profile(profile_name):
+#     # Load the dates.json file
+#     with open(DATES_DATA_FILE_PATH, 'r') as file:
+#         data = json.load(file)
+#
+#     # Check if the provided profile_name is in the JSON data
+#     if "profiles" in data and profile_name in data["profiles"]:
+#         # Return the list of dates for the specified profile
+#         return data["profiles"][profile_name]
+#     else:
+#         # Return an empty list if the profile is not found
+#         return []
 
 
 def profiles(request):
     LogData(request).update_user_data()
     selected_profile = request.session.get('selected_profile', None)
-
-    with open(PROFILE_FILE_PATH, newline='') as csvfile:
-        reader = csv.reader(csvfile)
-        profiles = next(reader)
-
-    dates = get_dates_for_profile(str(selected_profile))
-    print(dates)
-
+    profiles_ = Profiles().list_of_strings
+    profile_object = Profiles().get_profile_by_name(selected_profile)
+    dates = profile_object.dates
+    print(profile_object.current_rewards)
     return render(request, 'myapp/profiles.html',
-                  {'profiles': profiles, 'selected_profile': selected_profile, 'dates': dates})
+                  {'profiles': profiles_, 'selected_profile': selected_profile, 'dates': dates})
 
 
 def scores(request):
@@ -645,7 +668,7 @@ def add_profile(request):
 
         if profile_name:
             Profiles().create_profile(request.POST.get('profile_name'))
-            print(Profiles().list_of_names)
+            print(Profiles().list_of_strings)
 
             messages.success(request, f'Profile "{profile_name}" added successfully!')
             return redirect('profiles')  # Redirect to profiles page after adding the profile

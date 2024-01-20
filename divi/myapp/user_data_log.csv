@@ -1543,3 +1543,105 @@ Jackson,/jobs/,2024_01_20_15_26_47
 Jackson,/job_details/,2024_01_20_15_26_50
 Jackson,/complete_job/,2024_01_20_15_26_54
 Jackson,/jobs/,2024_01_20_15_26_54
+,/,2024_01_20_15_33_45
+,/profiles/,2024_01_20_15_33_46
+Jackson,/,2024_01_20_15_35_03
+Jackson,/profiles/,2024_01_20_15_35_04
+Jackson,/jobs/,2024_01_20_15_35_09
+<myapp.views.Profile object at 0x000002E2403703D0>,/jobs/,2024_01_20_15_35_09
+<myapp.views.Profile object at 0x000002E2403703D0>,/,2024_01_20_15_35_58
+<myapp.views.Profile object at 0x000002E2403703D0>,/profiles/,2024_01_20_15_35_59
+<myapp.views.Profile object at 0x000002E2403703D0>,/jobs/,2024_01_20_15_36_03
+<myapp.views.Profile object at 0x000001E4D4217490>,/jobs/,2024_01_20_15_36_03
+<myapp.views.Profile object at 0x000001E4D4217490>,/,2024_01_20_15_36_29
+<myapp.views.Profile object at 0x000001E4D4217490>,/profiles/,2024_01_20_15_36_31
+<myapp.views.Profile object at 0x000001E4D4217490>,/jobs/,2024_01_20_15_36_34
+<myapp.views.Profile object at 0x0000022E758675D0>,/jobs/,2024_01_20_15_36_34
+<myapp.views.Profile object at 0x0000022E758675D0>,/,2024_01_20_15_37_36
+<myapp.views.Profile object at 0x0000022E758675D0>,/profiles/,2024_01_20_15_37_39
+<myapp.views.Profile object at 0x0000022E758675D0>,/jobs/,2024_01_20_15_37_41
+<myapp.views.Profile object at 0x0000027E1448B950>,/jobs/,2024_01_20_15_37_41
+<myapp.views.Profile object at 0x0000027E1448B950>,/profiles/,2024_01_20_15_37_44
+<myapp.views.Profile object at 0x0000027E1448B950>,/jobs/,2024_01_20_15_37_46
+<myapp.views.Profile object at 0x0000027E1448BA50>,/jobs/,2024_01_20_15_37_46
+<myapp.views.Profile object at 0x0000027E1448BA50>,/profiles/,2024_01_20_15_37_52
+<myapp.views.Profile object at 0x0000027E1448BA50>,/jobs/,2024_01_20_15_37_54
+<myapp.views.Profile object at 0x0000027E144A56D0>,/jobs/,2024_01_20_15_37_54
+<myapp.views.Profile object at 0x0000027E144A56D0>,/,2024_01_20_15_38_25
+<myapp.views.Profile object at 0x0000027E144A56D0>,/profiles/,2024_01_20_15_38_26
+<myapp.views.Profile object at 0x0000027E144A56D0>,/jobs/,2024_01_20_15_38_29
+<myapp.views.Profile object at 0x00000200A1122F90>,/jobs/,2024_01_20_15_38_29
+<myapp.views.Profile object at 0x00000200A1122F90>,/profiles/,2024_01_20_15_38_31
+<myapp.views.Profile object at 0x00000200A1122F90>,/jobs/,2024_01_20_15_38_33
+<myapp.views.Profile object at 0x00000200A138FE90>,/jobs/,2024_01_20_15_38_33
+<myapp.views.Profile object at 0x00000200A138FE90>,/,2024_01_20_15_38_57
+<myapp.views.Profile object at 0x00000200A138FE90>,/profiles/,2024_01_20_15_38_59
+<myapp.views.Profile object at 0x00000200A138FE90>,/jobs/,2024_01_20_15_39_06
+<myapp.views.Profile object at 0x000001F3ACE88710>,/jobs/,2024_01_20_15_39_06
+<myapp.views.Profile object at 0x000001F3ACE88710>,/,2024_01_20_15_41_13
+<myapp.views.Profile object at 0x000001F3ACE88710>,/,2024_01_20_15_41_20
+<myapp.views.Profile object at 0x000001F3ACE88710>,/jobs/,2024_01_20_15_41_22
+<myapp.views.Profile object at 0x000001F3ACE88710>,/profiles/,2024_01_20_15_41_24
+<myapp.views.Profile object at 0x000001F3ACE88710>,/,2024_01_20_15_42_48
+<myapp.views.Profile object at 0x000001F3ACE88710>,/profiles/,2024_01_20_15_42_50
+<myapp.views.Profile object at 0x000001F3ACE88710>,/,2024_01_20_15_43_48
+<myapp.views.Profile object at 0x000001F3ACE88710>,/profiles/,2024_01_20_15_43_49
+<myapp.views.Profile object at 0x000001F3ACE88710>,/,2024_01_20_15_44_23
+<myapp.views.Profile object at 0x000001F3ACE88710>,/profiles/,2024_01_20_15_44_25
+<myapp.views.Profile object at 0x000001F3ACE88710>,/,2024_01_20_15_44_48
+<myapp.views.Profile object at 0x000001F3ACE88710>,/profiles/,2024_01_20_15_44_53
+<myapp.views.Profile object at 0x000001F3ACE88710>,/,2024_01_21_11_31_05
+<myapp.views.Profile object at 0x000001F3ACE88710>,/profiles/,2024_01_21_11_31_12
+<myapp.views.Profile object at 0x000001F3ACE88710>,/,2024_01_21_11_32_52
+<myapp.views.Profile object at 0x000001F3ACE88710>,/profiles/,2024_01_21_11_32_54
+<myapp.views.Profile object at 0x000001F3ACE88710>,/,2024_01_21_11_37_13
+<myapp.views.Profile object at 0x000001F3ACE88710>,/profiles/,2024_01_21_11_37_16
+<myapp.views.Profile object at 0x000001F3ACE88710>,/,2024_01_21_11_37_46
+<myapp.views.Profile object at 0x000001F3ACE88710>,/profiles/,2024_01_21_11_37_47
+<myapp.views.Profile object at 0x000001F3ACE88710>,/,2024_01_21_11_38_27
+<myapp.views.Profile object at 0x000001F3ACE88710>,/scores/,2024_01_21_11_38_34
+<myapp.views.Profile object at 0x000001F3ACE88710>,/jobs/,2024_01_21_11_38_35
+<myapp.views.Profile object at 0x000001F3ACE88710>,/,2024_01_21_11_38_51
+,/,2024_01_21_11_39_03
+,/profiles/,2024_01_21_11_39_05
+,/,2024_01_21_11_39_55
+,/profiles/,2024_01_21_11_39_56
+,/jobs/,2024_01_21_11_40_04
+<myapp.views.Profile object at 0x000002CADE247D90>,/jobs/,2024_01_21_11_40_04
+<myapp.views.Profile object at 0x000002CADE247D90>,/,2024_01_21_11_40_31
+<myapp.views.Profile object at 0x000002CADE247D90>,/profiles/,2024_01_21_11_40_32
+<myapp.views.Profile object at 0x000002CADE247D90>,/jobs/,2024_01_21_11_40_34
+<myapp.views.Profile object at 0x000002CADE247D90>,/profiles/,2024_01_21_11_41_04
+<myapp.views.Profile object at 0x000002CADE247D90>,/jobs/,2024_01_21_11_41_04
+<myapp.views.Profile object at 0x000002CADE247D90>,/profiles/,2024_01_21_11_41_40
+<myapp.views.Profile object at 0x000002CADE247D90>,/jobs/,2024_01_21_11_41_40
+,/,2024_01_21_11_42_36
+,/profiles/,2024_01_21_11_42_37
+,/jobs/,2024_01_21_11_42_39
+<myapp.views.Profile object at 0x0000025E8B25C450>,/jobs/,2024_01_21_11_42_39
+,/,2024_01_21_11_43_02
+,/profiles/,2024_01_21_11_43_03
+,/jobs/,2024_01_21_11_43_04
+<myapp.views.Profile object at 0x000001F1976CDCD0>,/jobs/,2024_01_21_11_43_04
+<myapp.views.Profile object at 0x000001F1976CDCD0>,/,2024_01_21_11_43_26
+<myapp.views.Profile object at 0x000001F1976CDCD0>,/profiles/,2024_01_21_11_43_28
+,/,2024_01_21_11_45_22
+,/profiles/,2024_01_21_11_45_23
+,/jobs/,2024_01_21_11_45_24
+Jackson,/jobs/,2024_01_21_11_45_25
+Jackson,/profiles/,2024_01_21_11_45_33
+Jackson,/jobs/,2024_01_21_11_45_34
+Kelsey,/jobs/,2024_01_21_11_45_34
+Kelsey,/job_details/,2024_01_21_11_45_37
+Kelsey,/complete_job/,2024_01_21_11_45_39
+Kelsey,/jobs/,2024_01_21_11_45_39
+Kelsey,/scores/,2024_01_21_11_45_41
+Kelsey,/,2024_01_21_11_46_53
+Kelsey,/profiles/,2024_01_21_11_46_59
+Kelsey,/,2024_01_21_11_58_32
+Kelsey,/profiles/,2024_01_21_11_58_36
+Kelsey,/,2024_01_21_11_59_03
+Kelsey,/profiles/,2024_01_21_11_59_05
+Kelsey,/jobs/,2024_01_21_11_59_34
+Jackson,/jobs/,2024_01_21_11_59_34
+Jackson,/profiles/,2024_01_21_11_59_41
