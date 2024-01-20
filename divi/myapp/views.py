@@ -363,26 +363,26 @@ def complete_job(request):
     return redirect('jobs')
 
 
-def update_profiles_csv(profile_name, job_name):
-    # Update profiles.csv with a new line for the completed job
-    profiles_file_path = PROFILE_FILE_PATH
+# def update_profiles_csv(profile_name, job_name):
+#     # Update profiles.csv with a new line for the completed job
+#     profiles_file_path = PROFILE_FILE_PATH
+#
+#     # Read existing fieldnames from the CSV file
+#     with open(profiles_file_path, 'r') as csvfile:
+#         reader = csv.reader(csvfile)
+#         fieldnames = next(reader)
+#
+#     # Update profiles.csv with a new line for the completed job
+#     with open(profiles_file_path, 'a', newline='') as csvfile:
+#         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+#
+#         # Create a new profile line dictionary, skipping the first field
+#         new_profile_line = {field: 'None' if field != profile_name else job_name for field in fieldnames}
+#
+#         writer.writerow(new_profile_line)
 
-    # Read existing fieldnames from the CSV file
-    with open(profiles_file_path, 'r') as csvfile:
-        reader = csv.reader(csvfile)
-        fieldnames = next(reader)
 
-    # Update profiles.csv with a new line for the completed job
-    with open(profiles_file_path, 'a', newline='') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-        # Create a new profile line dictionary, skipping the first field
-        new_profile_line = {field: 'None' if field != profile_name else job_name for field in fieldnames}
-
-        writer.writerow(new_profile_line)
-
-
-def jobs(request):
+def jobs(request): #GOOD
     LogData(request).update_user_data()
     selected_profile = request.session.get('selected_profile', None)
     jobs_list = Jobs().jobs_list
@@ -400,7 +400,7 @@ def jobs(request):
     return render(request, 'myapp/jobs.html', {'selected_profile': selected_profile, 'jobs_list': jobs_list})
 
 
-def job_details(request):
+def job_details(request): #GOOD
     LogData(request).update_user_data()
     selected_job_name = request.POST.get('selected_job_name', None)
 

@@ -86,5 +86,27 @@
       "Kelsey",
       "Toby"
     ]
+  },
+  {
+    "job": {
+      "name": "testing",
+      "description": "test<br>",
+      "reward": "10",
+      "cooldown": "0",
+      "last_completed": "2024_01_20_15_26_54",
+      "one_off": "",
+      "colour": "normal"
+    },
+    "participants": [
+      "Jackson"
+    ],
+    "who_pays": [
+      "Jackson",
+      "Olaf",
+      "Dan",
+      "Brie",
+      "Kelsey",
+      "Toby"
+    ]
   }
 ]
