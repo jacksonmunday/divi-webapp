@@ -100,12 +100,12 @@
         <div>
             {% for profile in profiles %}
                 <div class="profile-container">
-    <a href="{% url 'scores_details' selected_profile=profile %}" class="big-button profile-button">
+    <a href="{% url 'scores_details' selected_profile=profile.name %}" class="big-button profile-button">
         <span class="profile-text">{{ profile.name }}</span>
         <div class="balance-box{% if profile.balance >= 0 %}-positive{% else %}-negative{% endif %}">{{ profile.balance }}$</div>
         <div class="reward-box">{{ profile.rewards }}$</div>
     </a>
-    <a href="{% url 'scores_details' selected_profile=profile %}" class="big-button details-button">Details</a>
+    <a href="{% url 'scores_details' selected_profile=profile.name %}" class="big-button details-button">Details</a>
 </div>
             {% endfor %}
         </div>

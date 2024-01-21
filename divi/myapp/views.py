@@ -197,10 +197,6 @@ class CompletedJobs:
 
     def __init__(self):
         self.file_path = COMPLETED_JOBS_DATA_FILE_PATH
-        self.complete_jobs_list = None
-        self.update_complete_jobs_list()
-
-    def update_complete_jobs_list(self):
         self.complete_jobs_list = self.load_json()
 
     def add_to_json(self, completed_job):
@@ -231,7 +227,7 @@ class CompletedJobs:
         with open(self.file_path, 'w') as file:
             json.dump(existing_data, file, indent=2)
 
-        self.update_complete_jobs_list()
+        self.complete_jobs_list = self.load_json()
 
     def load_json(self):
         try:
@@ -240,6 +236,14 @@ class CompletedJobs:
                 return [CompletedJob.from_json_data(job_data) for job_data in completed_jobs_data]
         except (FileNotFoundError, json.JSONDecodeError):
             return []
+
+    def get_completed_jobs_from_profile_name(self, name):
+        list_ = []
+        for completed_job in self.complete_jobs_list:
+            for participant in completed_job.participants:
+                if participant.lower() == name.lower():
+                    list_.append(completed_job)
+        return list_
 
 
 class CompletedJob:
@@ -539,40 +543,40 @@ def show_complete_button(selected_job_details):
     return time_difference.total_seconds() / 3600 > cooldown_hours
 
 
-def find_totals_per_profile(file_path=PROFILE_FILE_PATH, jobs_file=JOBS_FILE_PATH):
-    # Read the CSV file
-    with open(file_path, 'r') as file:
-        reader = csv.reader(file)
-        data = list(reader)
-
-    # Transpose the data
-    transposed_data = list(map(list, zip(*data)))
-
-    # Read the jobs file to create a dictionary mapping job names to rewards
-    job_rewards = {}
-    with open(jobs_file, 'r') as jobs_file:
-        jobs_reader = csv.reader(jobs_file)
-        next(jobs_reader)  # Skip header
-        for row in jobs_reader:
-            name, _, reward, _, _, _ = row
-            job_rewards[name] = int(reward)
-
-    # Convert the items in each row (excluding the first entry) into rewards
-    for row in transposed_data:
-        for i in range(1, len(row)):
-            job_name = row[i]
-            if job_name == 'None' or job_name not in job_rewards:
-                row[i] = 0
-            else:
-                row[i] = job_rewards[job_name]
-
-    # Calculate the sum of each row (excluding the first entry)
-    sums = [[row[0], sum(row[1:])] for row in transposed_data]
-
-    totals_per_profile_with_balance = calculate_balance(sums)
-    print(totals_per_profile_with_balance)
-
-    return totals_per_profile_with_balance
+# def find_totals_per_profile(file_path=PROFILE_FILE_PATH, jobs_file=JOBS_FILE_PATH):
+#     # Read the CSV file
+#     with open(file_path, 'r') as file:
+#         reader = csv.reader(file)
+#         data = list(reader)
+#
+#     # Transpose the data
+#     transposed_data = list(map(list, zip(*data)))
+#
+#     # Read the jobs file to create a dictionary mapping job names to rewards
+#     job_rewards = {}
+#     with open(jobs_file, 'r') as jobs_file:
+#         jobs_reader = csv.reader(jobs_file)
+#         next(jobs_reader)  # Skip header
+#         for row in jobs_reader:
+#             name, _, reward, _, _, _ = row
+#             job_rewards[name] = int(reward)
+#
+#     # Convert the items in each row (excluding the first entry) into rewards
+#     for row in transposed_data:
+#         for i in range(1, len(row)):
+#             job_name = row[i]
+#             if job_name == 'None' or job_name not in job_rewards:
+#                 row[i] = 0
+#             else:
+#                 row[i] = job_rewards[job_name]
+#
+#     # Calculate the sum of each row (excluding the first entry)
+#     sums = [[row[0], sum(row[1:])] for row in transposed_data]
+#
+#     totals_per_profile_with_balance = calculate_balance(sums)
+#     print(totals_per_profile_with_balance)
+#
+#     return totals_per_profile_with_balance
 
 
 def get_score_details():
@@ -589,19 +593,10 @@ def get_score_details():
 
 def scores_details(request, selected_profile):
     LogData(request).update_user_data()
-    score_details = get_score_details()
-
-    # Find the score details for the selected profile
-    selected_score_details = [details[1:] for details in score_details if details[0] == selected_profile][0]
-
-    # Filter out 'None' values
-    selected_score_details = [detail for detail in selected_score_details if detail != 'None']
-
-    reward_details = get_rewards_per_job_name(selected_score_details)
+    completed_jobs = CompletedJobs().get_completed_jobs_from_profile_name(selected_profile)
 
     return render(request, 'myapp/scores_details.html',
-                  {'selected_profile': selected_profile, 'score_details': selected_score_details,
-                   'reward_details': reward_details})
+                  {'selected_profile': selected_profile, 'completed_jobs': completed_jobs})
 
 
 def calculate_balance(totals_per_profile):

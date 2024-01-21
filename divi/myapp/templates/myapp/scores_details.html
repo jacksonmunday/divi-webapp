@@ -60,8 +60,8 @@
         </h1>
         <!-- Display score details for the selected profile -->
         <div class="details-box">
-            {% for score_detail in score_details %}
-                <div class="score-detail-box">{{ forloop.counter }}. {{ score_detail }}</div>
+            {% for completed_job in completed_jobs %}
+                <div class="score-detail-box">{{ forloop.counter }}. {{ completed_job.job.name }}</div>
             {% endfor %}
         </div>
 
