@@ -5,7 +5,7 @@
       "description": "<br>Must be full<br>",
       "reward": "1",
       "cooldown": "0",
-      "last_completed": "2024_01_19_14_10_53",
+      "last_completed": "2024_01_21_12_13_10",
       "one_off": "false",
       "colour": "normal"
     },
@@ -13,34 +13,11 @@
       "Jackson"
     ],
     "who_pays": [
-      "Jackson",
-      "Olaf",
       "Dan",
-      "Brie",
-      "Kelsey",
-      "Toby"
-    ]
-  },
-  {
-    "job": {
-      "name": "Empty indoor veggie bin",
-      "description": "<br>Must be full<br>",
-      "reward": "1",
-      "cooldown": "0",
-      "last_completed": "2024_01_19_14_12_32",
-      "one_off": "false",
-      "colour": "normal"
-    },
-    "participants": [
-      "Jackson"
-    ],
-    "who_pays": [
-      "Jackson",
       "Olaf",
-      "Dan",
-      "Brie",
       "Kelsey",
-      "Toby"
+      "Toby",
+      "Brie"
     ]
   },
   {
@@ -49,73 +26,7 @@
       "description": "<br>Must be full<br>",
       "reward": "1",
       "cooldown": "0",
-      "last_completed": "2024_01_19_14_12_49",
-      "one_off": "false",
-      "colour": "normal"
-    },
-    "participants": [
-      "Jackson"
-    ],
-    "who_pays": [
-      "Jackson",
-      "Olaf",
-      "Dan",
-      "Brie",
-      "Kelsey",
-      "Toby"
-    ]
-  },
-  {
-    "job": {
-      "name": "Empty indoor recycling",
-      "description": "<br>Must be full<br>",
-      "reward": "1",
-      "cooldown": "0",
-      "last_completed": "2024_01_19_14_13_15",
-      "one_off": "false",
-      "colour": "normal"
-    },
-    "participants": [
-      "Jackson"
-    ],
-    "who_pays": [
-      "Jackson",
-      "Olaf",
-      "Dan",
-      "Brie",
-      "Kelsey",
-      "Toby"
-    ]
-  },
-  {
-    "job": {
-      "name": "testing",
-      "description": "test<br>",
-      "reward": "10",
-      "cooldown": "0",
-      "last_completed": "2024_01_20_15_26_54",
-      "one_off": "",
-      "colour": "normal"
-    },
-    "participants": [
-      "Jackson"
-    ],
-    "who_pays": [
-      "Jackson",
-      "Olaf",
-      "Dan",
-      "Brie",
-      "Kelsey",
-      "Toby"
-    ]
-  },
-  {
-    "job": {
-      "name": "Empty indoor rubbish",
-      "description": "<br>Must be full<br>",
-      "reward": "1",
-      "cooldown": "0",
-      "last_completed": "2024_01_21_11_45_39",
+      "last_completed": "2024_01_21_12_13_17",
       "one_off": "false",
       "colour": "normal"
     },
@@ -123,13 +34,11 @@
       "Kelsey"
     ],
     "who_pays": [
-      "Jackson",
-      "Olaf",
       "Dan",
-      "Brie",
-      "Kelsey",
+      "Olaf",
       "Toby",
-      "Nig"
+      "Brie",
+      "Jackson"
     ]
   }
 ]

@@ -332,6 +332,7 @@ class Profiles:
 
     def get_profile_by_name(self, name):
         # Convert name to lowercase for case-insensitive comparison
+
         name_lower = name.lower()
 
         # Find the profile with the given name
@@ -349,8 +350,9 @@ class Profile:
         self.name = name
         self.dates = []
 
-        self.current_rewards = self.get_current_rewards()
-        self.current_balance = None
+        self.rewards = self.get_current_rewards()
+        self.loss = self.get_current_losses()
+        self.balance = self.rewards - self.loss
 
     def get_current_rewards(self):
         rewards = 0
@@ -358,11 +360,17 @@ class Profile:
         for completed_job in completed_jobs:
             for participant in completed_job.participants:
                 if participant.lower() == self.name.lower():
-                    rewards += int(completed_job.job.reward)/len(completed_job.participants)
+                    rewards += int(completed_job.job.reward) / len(completed_job.participants)
         return rewards
 
-
-
+    def get_current_losses(self):
+        loss = 0
+        completed_jobs = CompletedJobs().complete_jobs_list
+        for completed_job in completed_jobs:
+            for who_pays in completed_job.who_pays:
+                if who_pays.lower() == self.name.lower():
+                    loss += int(completed_job.job.reward) / len(completed_job.who_pays)
+        return loss
 
 
 @require_POST
@@ -378,7 +386,7 @@ def complete_job(request):
         job_object = Jobs().get_job_details(selected_job_name)
         completed_job_object = CompletedJob(job=job_object,
                                             participants=[selected_profile],
-                                            who_pays=Profiles().list_of_strings)
+                                            who_pays=list(set(Profiles().list_of_strings) - set([selected_profile])))
         CompletedJobs().add_to_json(completed_job_object)
 
         messages.success(request, f'Job "{selected_job_name}" completed successfully!')
@@ -414,7 +422,6 @@ def jobs(request):  # GOOD
 
     if request.method == 'POST':
         selected_profile = request.POST.get('selected_profile', None)
-        print(type(selected_profile))
 
         if selected_profile:
 
@@ -508,9 +515,11 @@ def profiles(request):
     LogData(request).update_user_data()
     selected_profile = request.session.get('selected_profile', None)
     profiles_ = Profiles().list_of_strings
-    profile_object = Profiles().get_profile_by_name(selected_profile)
-    dates = profile_object.dates
-    print(profile_object.current_rewards)
+    if selected_profile:
+        profile_object = Profiles().get_profile_by_name(selected_profile)
+        dates = profile_object.dates
+    else:
+        dates = []
     return render(request, 'myapp/profiles.html',
                   {'profiles': profiles_, 'selected_profile': selected_profile, 'dates': dates})
 
