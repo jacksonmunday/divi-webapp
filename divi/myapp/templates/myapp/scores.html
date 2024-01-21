@@ -98,12 +98,12 @@
 
         <!-- Display profile buttons with total rewards and details button -->
         <div>
-            {% for profile, total_reward, balance in totals_per_profile %}
+            {% for profile in profiles %}
                 <div class="profile-container">
     <a href="{% url 'scores_details' selected_profile=profile %}" class="big-button profile-button">
-        <span class="profile-text">{{ profile }}</span>
-        <div class="balance-box{% if balance >= 0 %}-positive{% else %}-negative{% endif %}">{{ balance }}$</div>
-        <div class="reward-box">{{ total_reward }}$</div>
+        <span class="profile-text">{{ profile.name }}</span>
+        <div class="balance-box{% if profile.balance >= 0 %}-positive{% else %}-negative{% endif %}">{{ profile.balance }}$</div>
+        <div class="reward-box">{{ profile.rewards }}$</div>
     </a>
     <a href="{% url 'scores_details' selected_profile=profile %}" class="big-button details-button">Details</a>
 </div>

@@ -526,8 +526,8 @@ def profiles(request):
 
 def scores(request):
     LogData(request).update_user_data()
-    totals_per_profile = find_totals_per_profile()
-    return render(request, 'myapp/scores.html', {'totals_per_profile': totals_per_profile})
+    profiles_ = Profiles().list_of_objects
+    return render(request, 'myapp/scores.html', {'profiles': profiles_})
 
 
 def show_complete_button(selected_job_details):
@@ -570,6 +570,7 @@ def find_totals_per_profile(file_path=PROFILE_FILE_PATH, jobs_file=JOBS_FILE_PAT
     sums = [[row[0], sum(row[1:])] for row in transposed_data]
 
     totals_per_profile_with_balance = calculate_balance(sums)
+    print(totals_per_profile_with_balance)
 
     return totals_per_profile_with_balance
 
