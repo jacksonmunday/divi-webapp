@@ -11,15 +11,13 @@ dev = True  # True if running from laptop
 
 if not dev:
     JOBS_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/jobs.csv'
-    JOBS_LOG_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/jobs_log.csv'
-    PROFILE_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/profiles.csv'
+    PROFILE_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/profiles.json'
     USER_DATA_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/user_data_log.csv'
     DATES_DATA_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/dates.json'
     COMPLETED_JOBS_DATA_FILE_PATH = '/home/diviwebapp/divi-webapp/divi/myapp/completed_jobs.json'
 else:
     JOBS_FILE_PATH = 'myapp/jobs.csv'
-    JOBS_LOG_FILE_PATH = 'myapp/jobs_log.csv'
-    PROFILE_FILE_PATH = 'myapp/profiles.csv'
+    PROFILE_FILE_PATH = 'myapp/profiles.json'
     USER_DATA_FILE_PATH = 'myapp/user_data_log.csv'
     DATES_DATA_FILE_PATH = 'myapp/dates.json'
     COMPLETED_JOBS_DATA_FILE_PATH = 'myapp/completed_jobs.json'
@@ -78,7 +76,6 @@ class LogData:
     def __init__(self, request):
         self.request = request
         self.page_view_data_path = USER_DATA_FILE_PATH
-        self.job_complete_data_path = JOBS_LOG_FILE_PATH
 
     def get_client_name(self):
         profile_name = self.request.session.get('selected_profile')
@@ -95,26 +92,6 @@ class LogData:
         # Append the new line to the CSV file
         with open(self.page_view_data_path, 'a', newline='') as csvfile:
             fieldnames = ['ip', 'path', 'time']
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-            # If the file is empty, write the header
-            if csvfile.tell() == 0:
-                writer.writeheader()
-
-            writer.writerow(new_log_entry)
-
-    def update_jobs_log(self, profile_name, job, date_completed):
-
-        # Create a new line for the CSV file
-        new_log_entry = {
-            'profile_name': profile_name,
-            'job': job,
-            'date_completed': date_completed,
-        }
-
-        # Append the new line to the CSV file
-        with open(self.job_complete_data_path, 'a', newline='') as csvfile:
-            fieldnames = ['profile_name', 'job', 'date_completed']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
             # If the file is empty, write the header
@@ -305,7 +282,7 @@ class CompletedJob:
 
 class Profiles:
     def __init__(self):
-        self.profiles_file_path = 'myapp/profiles.json'
+        self.profiles_file_path = PROFILE_FILE_PATH
         self.list_of_objects = self.load_profiles_from_json()  # Loaded everytime an object is made
         self.list_of_strings = self.get_profile_names_list()
 
@@ -411,7 +388,6 @@ def complete_job(request):
 
     if selected_job_name:
         Jobs().update_after_completed(selected_job_name)
-        LogData(request).update_jobs_log(selected_profile, selected_job_name, date_time_completed)
         job_object = Jobs().get_job_details(selected_job_name)
         completed_job_object = CompletedJob(job=job_object,
                                             participants=[selected_profile],
