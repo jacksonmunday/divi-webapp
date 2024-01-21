@@ -20,6 +20,13 @@
             margin-bottom: 20px;
         }
 
+        .reward-box {
+            padding: 3px 6px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
         .back-button {
             margin-top: 20px;
             padding: 10px 20px;
@@ -59,11 +66,28 @@
             Jobs done by {{ selected_profile }}
         </h1>
         <!-- Display score details for the selected profile -->
-        <div class="details-box">
-            {% for completed_job in completed_jobs %}
-                <div class="score-detail-box">{{ forloop.counter }}. {{ completed_job.job.name }}</div>
-            {% endfor %}
+<!-- Display score details for the selected profile -->
+<!-- Display score details for the selected profile -->
+<div class="details-box">
+    {% for completed_job in completed_jobs %}
+        <div class="score-detail-box">
+            <strong>Job:</strong> {{ completed_job.job.name }}
+
+            <!-- Section for Date -->
+            <div>
+                <strong>Date:</strong> {{ completed_job.formatted_date }}
+            </div>
+
+            <!-- Section for Reward -->
+            <div>
+                <strong>Reward:</strong> <span class="reward-box">${{ completed_job.job.reward }}</span>
+            </div>
         </div>
+    {% endfor %}
+</div>
+
+
+
 
         <!-- Back Button -->
         <div class="text-center">

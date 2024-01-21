@@ -1,44 +1,71 @@
 [
   {
     "job": {
+      "name": "Empty dishwasher",
+      "description": "<br>",
+      "reward": "2",
+      "cooldown": "0",
+      "last_completed": "2024_01_21_19_42_53",
+      "one_off": "false",
+      "colour": "normal"
+    },
+    "participants": [
+      "yoooza"
+    ],
+    "who_pays": [
+      "Dan",
+      "Kelsey",
+      "Brie",
+      "Jackson",
+      "Toby",
+      "Olaf"
+    ],
+    "formatted_date": "21 January 2024  at 19:42"
+  },
+  {
+    "job": {
       "name": "Empty indoor veggie bin",
       "description": "<br>Must be full<br>",
       "reward": "1",
       "cooldown": "0",
-      "last_completed": "2024_01_21_12_13_10",
+      "last_completed": "2024_01_21_19_43_11",
       "one_off": "false",
       "colour": "normal"
     },
     "participants": [
-      "Jackson"
+      "yoooza"
     ],
     "who_pays": [
       "Dan",
-      "Olaf",
       "Kelsey",
+      "Brie",
+      "Jackson",
       "Toby",
-      "Brie"
-    ]
+      "Olaf"
+    ],
+    "formatted_date": "21 January 2024  at 19:43"
   },
   {
     "job": {
-      "name": "Empty indoor recycling",
-      "description": "<br>Must be full<br>",
-      "reward": "1",
+      "name": "Empty dishwasher",
+      "description": "<br>",
+      "reward": "2",
       "cooldown": "0",
-      "last_completed": "2024_01_21_12_13_17",
+      "last_completed": "2024_01_21_19_43_16",
       "one_off": "false",
       "colour": "normal"
     },
     "participants": [
-      "Kelsey"
+      "Brie"
     ],
     "who_pays": [
       "Dan",
-      "Olaf",
+      "Kelsey",
+      "yoooza",
+      "Jackson",
       "Toby",
-      "Brie",
-      "Jackson"
-    ]
+      "Olaf"
+    ],
+    "formatted_date": "21 January 2024  at 19:43"
   }
 ]

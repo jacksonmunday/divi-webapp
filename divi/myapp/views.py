@@ -38,6 +38,19 @@ class Utils:
         return datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 
     @staticmethod
+    def format_date(input_str):
+        try:
+            # Parse the input string using the specified format
+            dt_object = datetime.strptime(input_str, "%Y_%m_%d_%H_%M_%S")
+
+            # Format the date as desired
+            formatted_date = f'{dt_object.day} {dt_object.strftime("%B")} {dt_object.year}  at {dt_object.hour}:{dt_object.minute}'
+
+            return formatted_date
+        except ValueError:
+            return "Invalid date format"
+
+    @staticmethod
     def convert_cooldown(cooldown):
         # Convert cooldown from hours to weeks, days, and hours
         cooldown = int(cooldown)
@@ -46,6 +59,15 @@ class Utils:
         hours = cooldown % 24
 
         return f"{weeks} weeks, {days} days, {hours} hours"
+
+    @staticmethod
+    def show_complete_button(selected_job_details):
+        last_completed_time = datetime.strptime(selected_job_details.last_completed, "%Y_%m_%d_%H_%M_%S")
+        current_time = datetime.now()
+        time_difference = current_time - last_completed_time
+        cooldown_hours = int(selected_job_details.cooldown)
+
+        return time_difference.total_seconds() / 3600 > cooldown_hours
 
 
 class LogData:
@@ -219,6 +241,7 @@ class CompletedJobs:
             },
             "participants": completed_job.participants,
             "who_pays": completed_job.who_pays,
+            "formatted_date": Utils().format_date(completed_job.job.last_completed)
         }
 
         existing_data.append(new_completed_job)
@@ -251,10 +274,11 @@ class CompletedJob:
     Object for a completed job
     """
 
-    def __init__(self, job, participants, who_pays):
+    def __init__(self, job, participants, who_pays, formatted_date):
         self.job = job
         self.participants = participants
         self.who_pays = who_pays
+        self.formatted_date = formatted_date
         self.file_path = COMPLETED_JOBS_DATA_FILE_PATH
 
     def print_all(self):
@@ -275,7 +299,8 @@ class CompletedJob:
         )
         participants = json_data.get("participants", [])
         who_pays = json_data.get("who_pays", [])
-        return cls(job, participants, who_pays)
+        formatted_date = json_data.get("formatted_date", "")
+        return cls(job, participants, who_pays, formatted_date)
 
 
 class Profiles:
@@ -356,7 +381,7 @@ class Profile:
 
         self.rewards = self.get_current_rewards()
         self.loss = self.get_current_losses()
-        self.balance = self.rewards - self.loss
+        self.balance = round(self.rewards - self.loss, 2)
 
     def get_current_rewards(self):
         rewards = 0
@@ -365,7 +390,7 @@ class Profile:
             for participant in completed_job.participants:
                 if participant.lower() == self.name.lower():
                     rewards += int(completed_job.job.reward) / len(completed_job.participants)
-        return rewards
+        return round(rewards, 2)
 
     def get_current_losses(self):
         loss = 0
@@ -374,7 +399,7 @@ class Profile:
             for who_pays in completed_job.who_pays:
                 if who_pays.lower() == self.name.lower():
                     loss += int(completed_job.job.reward) / len(completed_job.who_pays)
-        return loss
+        return round(loss, 2)
 
 
 @require_POST
@@ -390,7 +415,9 @@ def complete_job(request):
         job_object = Jobs().get_job_details(selected_job_name)
         completed_job_object = CompletedJob(job=job_object,
                                             participants=[selected_profile],
-                                            who_pays=list(set(Profiles().list_of_strings) - set([selected_profile])))
+                                            who_pays=list(set(Profiles().list_of_strings) - set([selected_profile])),
+                                            formatted_date=Utils().format_date(job_object.last_completed))
+
         CompletedJobs().add_to_json(completed_job_object)
 
         messages.success(request, f'Job "{selected_job_name}" completed successfully!')
@@ -398,25 +425,6 @@ def complete_job(request):
         messages.error(request, 'Please select a valid job.')
 
     return redirect('jobs')
-
-
-# def update_profiles_csv(profile_name, job_name):
-#     # Update profiles.csv with a new line for the completed job
-#     profiles_file_path = PROFILE_FILE_PATH
-#
-#     # Read existing fieldnames from the CSV file
-#     with open(profiles_file_path, 'r') as csvfile:
-#         reader = csv.reader(csvfile)
-#         fieldnames = next(reader)
-#
-#     # Update profiles.csv with a new line for the completed job
-#     with open(profiles_file_path, 'a', newline='') as csvfile:
-#         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-#
-#         # Create a new profile line dictionary, skipping the first field
-#         new_profile_line = {field: 'None' if field != profile_name else job_name for field in fieldnames}
-#
-#         writer.writerow(new_profile_line)
 
 
 def jobs(request):  # GOOD
@@ -465,54 +473,13 @@ def job_details(request):  # GOOD
         job.time_since_last_complete = f"{weeks} weeks, {days} days, {hours} hours"
 
         # Check if the "Complete" button should be shown
-        job.show_complete_button = show_complete_button(job)
+        job.show_complete_button = Utils().show_complete_button(job)
 
         return render(request, 'myapp/job_details.html', {'selected_job_details': job})
     else:
         messages.error(request, 'Please select a valid job.')
 
     return redirect('jobs')
-
-
-# def get_job_details(job_name):
-#     with open(JOBS_FILE_PATH, newline='') as csvfile:
-#         reader = csv.DictReader(csvfile)
-#         for row in reader:
-#             if row['name'] == job_name:
-#                 return row
-#     return None
-
-
-# def load_jobs():
-#     jobs_list = []
-#     with open(JOBS_FILE_PATH, newline='') as csvfile:
-#         reader = csv.DictReader(csvfile)
-#         for row in reader:
-#             job = Job(row['name'], row['description'], row['reward'], row['cooldown'], row['last_completed'],
-#                       row['one_off'])
-#             jobs_list.append(job)
-#     return sort_by_reward(jobs_list)
-
-
-# def sort_by_reward(task_list):
-#     # Use the sorted function to sort the list based on the 'reward' key
-#     sorted_list = sorted(task_list, key=lambda x: int(x['reward']))
-#
-#     return sorted_list
-
-
-# def get_dates_for_profile(profile_name):
-#     # Load the dates.json file
-#     with open(DATES_DATA_FILE_PATH, 'r') as file:
-#         data = json.load(file)
-#
-#     # Check if the provided profile_name is in the JSON data
-#     if "profiles" in data and profile_name in data["profiles"]:
-#         # Return the list of dates for the specified profile
-#         return data["profiles"][profile_name]
-#     else:
-#         # Return an empty list if the profile is not found
-#         return []
 
 
 def profiles(request):
@@ -534,88 +501,12 @@ def scores(request):
     return render(request, 'myapp/scores.html', {'profiles': profiles_})
 
 
-def show_complete_button(selected_job_details):
-    last_completed_time = datetime.strptime(selected_job_details.last_completed, "%Y_%m_%d_%H_%M_%S")
-    current_time = datetime.now()
-    time_difference = current_time - last_completed_time
-    cooldown_hours = int(selected_job_details.cooldown)
-
-    return time_difference.total_seconds() / 3600 > cooldown_hours
-
-
-# def find_totals_per_profile(file_path=PROFILE_FILE_PATH, jobs_file=JOBS_FILE_PATH):
-#     # Read the CSV file
-#     with open(file_path, 'r') as file:
-#         reader = csv.reader(file)
-#         data = list(reader)
-#
-#     # Transpose the data
-#     transposed_data = list(map(list, zip(*data)))
-#
-#     # Read the jobs file to create a dictionary mapping job names to rewards
-#     job_rewards = {}
-#     with open(jobs_file, 'r') as jobs_file:
-#         jobs_reader = csv.reader(jobs_file)
-#         next(jobs_reader)  # Skip header
-#         for row in jobs_reader:
-#             name, _, reward, _, _, _ = row
-#             job_rewards[name] = int(reward)
-#
-#     # Convert the items in each row (excluding the first entry) into rewards
-#     for row in transposed_data:
-#         for i in range(1, len(row)):
-#             job_name = row[i]
-#             if job_name == 'None' or job_name not in job_rewards:
-#                 row[i] = 0
-#             else:
-#                 row[i] = job_rewards[job_name]
-#
-#     # Calculate the sum of each row (excluding the first entry)
-#     sums = [[row[0], sum(row[1:])] for row in transposed_data]
-#
-#     totals_per_profile_with_balance = calculate_balance(sums)
-#     print(totals_per_profile_with_balance)
-#
-#     return totals_per_profile_with_balance
-
-
-def get_score_details():
-    # Read the CSV file
-    with open(PROFILE_FILE_PATH, 'r') as file:
-        reader = csv.reader(file)
-        data = list(reader)
-
-    # Transpose the data
-    transposed_data = list(map(list, zip(*data)))
-
-    return transposed_data
-
-
 def scores_details(request, selected_profile):
     LogData(request).update_user_data()
     completed_jobs = CompletedJobs().get_completed_jobs_from_profile_name(selected_profile)
 
     return render(request, 'myapp/scores_details.html',
                   {'selected_profile': selected_profile, 'completed_jobs': completed_jobs})
-
-
-def calculate_balance(totals_per_profile):
-    total_rewards = sum([total[1] for total in totals_per_profile])
-    num_profiles = len(totals_per_profile)
-
-    # Calculate balance for each profile using the provided equation
-    for i in range(num_profiles):
-        num_rewards = totals_per_profile[i][1]
-        balance = ((num_profiles / (num_profiles - 1)) * num_rewards -
-                   (num_profiles / (num_profiles ** 2 - num_profiles)) * total_rewards)
-
-        # Round the balance to 2 decimal points
-        rounded_balance = round(balance, 2)
-
-        # Add the rounded balance to the existing tuple (profile, total_reward)
-        totals_per_profile[i] = (totals_per_profile[i][0], totals_per_profile[i][1], rounded_balance)
-
-    return totals_per_profile
 
 
 def add_job(request):
@@ -644,27 +535,6 @@ def add_job(request):
             return redirect('jobs')  # Redirect to jobs page after adding the job
 
     return render(request, 'myapp/add_job.html')  # Render the add_job.html template
-
-
-def get_rewards_per_job_name(job_names):
-    # Read the CSV file
-    with open(JOBS_FILE_PATH, 'r') as file:
-        reader = csv.reader(file)
-        data = list(reader)
-
-    # Create a dictionary to store job names and their rewards
-    job_rewards = {}
-
-    # Populate the dictionary from the CSV data
-    for row in data[1:]:  # Skip the header row
-        job_name = row[0]
-        reward = int(row[2])  # Assuming reward is in the third column, adjust if needed
-        job_rewards[job_name] = reward
-
-    # Create a list of rewards corresponding to the input job names
-    rewards_list = [job_rewards.get(job_name, 0) for job_name in job_names]
-
-    return rewards_list
 
 
 def add_profile(request):
