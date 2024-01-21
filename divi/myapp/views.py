@@ -105,11 +105,10 @@ class Jobs:
 
     def __init__(self):
         self.file_path = JOBS_FILE_PATH
-        self.jobs_list = None
-        self.update_jobs_list()
+        self.jobs_list = self.get_job_objects()
         self.update_job_colour()
 
-    def update_jobs_list(self):
+    def get_job_objects(self):
         jobs_list = []
         with open(self.file_path, newline='') as csvfile:
             reader = csv.DictReader(csvfile)
@@ -117,13 +116,30 @@ class Jobs:
                 job = Job(row['name'], row['description'], row['reward'], row['cooldown'], row['last_completed'],
                           row['one_off'])
                 jobs_list.append(job)
-        self.jobs_list = self.sort_by_reward(jobs_list)
+        return self.sort_by_reward(jobs_list)
 
     def get_job_details(self, searching_job_name):
         for job in self.jobs_list:
             if job.name == searching_job_name:
                 return job
         return None
+
+    def add_new_job(self, job):
+        job_exists = False
+
+        for current_job in self.jobs_list:
+            if current_job.name.lower() == job.name.lower():
+                job_exists = True
+
+        if not job_exists:
+            # Update jobs.csv with the new job
+            with open(JOBS_FILE_PATH, 'a', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow([job.name, job.description, job.reward, job.cooldown, job.last_completed,job.one_off])
+        else:
+            print("Job already exists")
+
+        self.jobs_list = self.get_job_objects()
 
     def update_job_colour(self):
         # Calculate time difference and update job color
@@ -148,9 +164,9 @@ class Jobs:
             if job.name == job_name:
                 job.last_completed = Utils.get_date_time()
                 break
-        self.write_jobs_list_to_csv()
+        self.update_csv_from_object_list()
 
-    def write_jobs_list_to_csv(self):
+    def update_csv_from_object_list(self):
         with open(self.file_path, 'w', newline='') as csvfile:
             fieldnames = ['name', 'description', 'reward', 'cooldown', 'last_completed', 'one_off']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -384,7 +400,6 @@ def complete_job(request):
     LogData(request).update_user_data()
     selected_profile = request.session.get('selected_profile', None)
     selected_job_name = request.POST.get('selected_job_name', None)
-    date_time_completed = Utils.get_date_time()
 
     if selected_job_name:
         Jobs().update_after_completed(selected_job_name)
@@ -503,10 +518,8 @@ def add_job(request):
             # Calculate cooldown in hours
             cooldown_in_hours = int(cooldown_weeks) * 7 * 24 + int(cooldown_days) * 24 + int(cooldown_hours)
 
-            # Update jobs.csv with the new job
-            with open(JOBS_FILE_PATH, 'a', newline='') as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerow([name, description, reward, cooldown_in_hours, '0001_01_01_00_00_00'])
+            new_job = Job(name, description, reward, cooldown_in_hours, '0001_01_01_00_00_00', False)
+            Jobs().add_new_job(new_job)
 
             return redirect('jobs')  # Redirect to jobs page after adding the job
 

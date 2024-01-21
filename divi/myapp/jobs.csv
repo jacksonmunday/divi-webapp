@@ -1,11 +1,12 @@
 name,description,reward,cooldown,last_completed,one_off
 Empty indoor veggie bin,<br>Must be full<br>,1,0,2024_01_21_19_43_11,false
 Empty indoor recycling,<br>Must be full<br>,1,0,2024_01_21_19_40_58,false
-Empty indoor rubbish,<br>Must be full<br>,1,0,2024_01_21_11_45_39,false
+Empty indoor rubbish,<br>Must be full<br>,1,0,2024_01_21_20_04_29,false
 1212,1<br>2<br>,1,193,2024_01_18_17_26_27,
 Empty dishwasher,<br>,2,0,2024_01_21_19_43_16,false
 Wheelie bins,Take out<br>Take back in<br>,2,0,2024_01_21_19_59_57,false
 Clean Fireplace ,Empty ashes<br>Vacuum mess<br>,2,168,2024_01_19_13_26_02,
+assfas,sa<br>,3,579,2024_01_22_11_39_39,False
 Vacuum carpet areas    ,Lounge<br>Hallway<br>Indoor toilet<br>Shower room<br>,4,168,2024_01_18_10_56_35,false
 Vacuum wood areas,Lounge\xa0<br>Kitchen<br>Dining area<br>,4,168,2024_01_18_10_57_39,false
 Clean Group towels,Wash them<br>Hang out to dry<br>Take back inside<br>,4,336,2024_01_09_05_15_48,false
@@ -15,6 +16,5 @@ Clean sinks and toilet,Shower Room sink<br>Toilet Sink<br>Clean toilet<br>Throw 
 Deep clean kitchen,Clean wall tiles<br>Clean grime from sink<br>Clean windowsill<br>Wipe down cabinet doors<br><br>Clean stove top<br>Move kitchen appliances and clean behind<br><br>,8,504,2024_01_21_19_13_54,True
 Deep clean rubbish bins,Indoor recycling bin<br>Indoor rubbish bin<br>Indoor veggie bin<br>,10,672,2024_01_21_19_20_30,false
 testing,test<br>,10,0,2024_01_21_19_41_31,
-1212,1<br>,12,193,0001_01_01_00_00_00,
 Kill all driveway weeds,<br>,15,672,2024_01_09_00_07_35,True
 Mega weed clean (toby),<br>,30,1680,2024_01_10_12_37_34,True
