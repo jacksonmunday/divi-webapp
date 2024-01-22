@@ -29,6 +29,8 @@
             border-radius: 5px; /* Rounded corners */
             display: inline-block;
         }
+
+
          /* Invisible box to extend the page */
         .invisible-box {
             height:55px; /* Adjust the height as needed */
@@ -118,7 +120,11 @@
                     {% if not job.one_off %}
                         <button type="button" class="big-button job-button" onclick="updateJobDetails('{{ job.name }}')" style="background-color: {{ job.colour }}; color: black;">
                             {{ job.name }}
+                            {% if job.hours_until_ready > 0 %}
+                                <div class="reward-box" style="background-color: #f5f5f5;">{{ job.hours_until_ready }} hours</div>
+                            {% endif %}
                             <div class="reward-box">{{ job.reward }}$</div>
+
                         </button>
                     {% endif %}
                 {% endfor %}

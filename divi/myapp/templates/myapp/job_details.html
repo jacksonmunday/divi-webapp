@@ -150,6 +150,7 @@
                 {% if selected_job_details.one_off|lower == 'false' %}
     <p>Cooldown: {{ selected_job_details.cooldown_formatted }}</p>
     <p>Last Completed: {{ selected_job_details.time_since_last_complete }}</p>
+                <p>Wait Time: {{ selected_job_details.hours_until_ready }} hours</p>
                 {% endif %}
 
 

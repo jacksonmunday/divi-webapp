@@ -115,6 +115,7 @@ class Jobs:
         self.file_path = JOBS_FILE_PATH
         self.jobs_list = self.get_job_objects()
         self.update_job_colour()
+        self.update_hours_until_ready()
 
     def get_job_objects(self):
         jobs_list = []
@@ -161,13 +162,25 @@ class Jobs:
                 if job.last_completed == '0001_01_01_00_00_00':
                     job.colour = 'white'
                 else:
-                    job.colour = '#ff6b6b'
+                    job.colour = 'red'
 
             else:
                 if time_difference.total_seconds() / 3600 < cooldown_hours:
-                    job.colour = '#ff6b6b'
+                    job.colour = 'red'
                 else:
                     job.colour = 'white'
+
+    def update_hours_until_ready(self):
+        for job in self.jobs_list:
+            last_completed_time = datetime.strptime(job.last_completed, "%Y_%m_%d_%H_%M_%S")
+            current_time = datetime.now()
+            time_difference = current_time - last_completed_time
+            remaining_hours = int(job.cooldown) - (time_difference.total_seconds() / 3600)
+            if remaining_hours > 0:
+                job.hours_until_ready = int(remaining_hours)
+            else:
+                job.hours_until_ready = 0
+            print(job.hours_until_ready)
 
     def update_after_completed(self, job_name):
         """
@@ -218,6 +231,7 @@ class Job:
         self.cooldown_formatted = None
         self.time_since_last_complete = None
         self.show_complete_button = None
+        self.hours_until_ready = None
 
     def print_job(self):
         print(self.name, self.description, self.reward, self.cooldown, self.last_completed, self.one_off)
@@ -389,7 +403,7 @@ class Profile:
 
         self.rewards = self.get_current_rewards()
         self.loss = self.get_current_losses()
-        self.balance = round(self.rewards - self.loss, 2)
+        self.balance = round(self.rewards - self.loss, 1)
 
     def get_current_rewards(self):
         rewards = 0
@@ -398,7 +412,7 @@ class Profile:
             for participant in completed_job.participants:
                 if participant.lower() == self.name.lower():
                     rewards += int(completed_job.job.reward) / len(completed_job.participants)
-        return round(rewards, 2)
+        return round(rewards, 1)
 
     def get_current_losses(self):
         loss = 0
@@ -407,7 +421,7 @@ class Profile:
             for who_pays in completed_job.who_pays:
                 if who_pays.lower() == self.name.lower():
                     loss += int(completed_job.job.reward) / len(completed_job.who_pays)
-        return round(loss, 2)
+        return round(loss, 1)
 
 
 @require_POST
