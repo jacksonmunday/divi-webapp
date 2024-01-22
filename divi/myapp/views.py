@@ -49,10 +49,9 @@ class Utils:
             # Parse the input string using the specified format
             dt_object = datetime.strptime(input_str, "%Y_%m_%d_%H_%M_%S")
 
-            if dt_object.minute <10:
+            if dt_object.minute < 10:
                 formatted_date = f'{dt_object.day} {dt_object.strftime("%B")} {dt_object.year}  at {dt_object.hour}:0{dt_object.minute}'
             else:
-
 
                 formatted_date = f'{dt_object.day} {dt_object.strftime("%B")} {dt_object.year}  at {dt_object.hour}:{dt_object.minute}'
 
@@ -184,7 +183,6 @@ class Jobs:
                 job.hours_until_ready = int(remaining_hours)
             else:
                 job.hours_until_ready = 0
-
 
     def update_after_completed(self, job_name):
         """
@@ -571,7 +569,6 @@ def add_profile(request):
 
         if profile_name:
             Profiles().create_profile(request.POST.get('profile_name'))
-
 
             messages.success(request, f'Profile "{profile_name}" added successfully!')
             return redirect('profiles')  # Redirect to profiles page after adding the profile
