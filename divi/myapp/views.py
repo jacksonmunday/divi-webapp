@@ -159,15 +159,15 @@ class Jobs:
 
             if job.one_off:
                 if job.last_completed == '0001_01_01_00_00_00':
-                    job.colour = 'normal'
+                    job.colour = 'white'
                 else:
-                    job.colour = 'red'
+                    job.colour = '#ff6b6b'
 
             else:
                 if time_difference.total_seconds() / 3600 < cooldown_hours:
-                    job.colour = 'red'
+                    job.colour = '#ff6b6b'
                 else:
-                    job.colour = 'normal'
+                    job.colour = 'white'
 
     def update_after_completed(self, job_name):
         """

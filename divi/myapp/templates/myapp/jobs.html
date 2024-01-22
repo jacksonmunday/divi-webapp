@@ -7,6 +7,21 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'myapp/css/styles.css' %}">
     <style>
+
+     .job-section {
+            margin-top: 20px;
+            border: 2px solid #f5f5f5;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #f5f5f5;
+
+        }
+
+        .job-section-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #333;
+        }
         .reward-box {
             background-color: #ffd700; /* Yellow color */
             color: #000; /* Black text color */
@@ -86,44 +101,54 @@
 
 
         <!-- Display job buttons with reward boxes inside if a profile is selected -->
-        {% if selected_profile %}
+        <!-- Display job buttons with reward boxes inside if a profile is selected -->
+    {% if selected_profile %}
+        <!-- Add Job Button -->
+        <div class="text-center">
+            <a href="{% url 'add_job' %}" class="big-button job-button add-job-button">
+                Add Job
+            </a>
+        </div>
 
-            <!-- Add Job Button -->
+        <!-- Reoccurring Jobs Section -->
+        <div class="job-section">
             <div class="text-center">
-                <a href="{% url 'add_job' %}" class="big-button job-button add-job-button">
-                    Add Job
-                </a>
+                <div class="job-section-title">Reoccurring Jobs</div>
+                {% for job in jobs_list %}
+                    {% if not job.one_off %}
+                        <button type="button" class="big-button job-button" onclick="updateJobDetails('{{ job.name }}')" style="background-color: {{ job.colour }}; color: black;">
+                            {{ job.name }}
+                            <div class="reward-box">{{ job.reward }}$</div>
+                        </button>
+                    {% endif %}
+                {% endfor %}
             </div>
+        </div>
 
+        <!-- One-off Jobs Section -->
+        <div class="job-section">
             <div class="text-center">
-                <form method="post" action="{% url 'job_details' %}" id="jobForm">
-                    {% csrf_token %}
-                    <div class="job-section-title">Reoccurring Jobs</div>
-                    {% for job in jobs_list %}
-                        {% if not job.one_off %}
-                            <button type="button" class="big-button job-button" onclick="updateJobDetails('{{ job.name }}')" style="background-color: {{ job.colour }}; color: black;">
-                                {{ job.name }}
-                                <div class="reward-box">{{ job.reward }}$</div>
-                            </button>
-                        {% endif %}
-                    {% endfor %}
-                    <div class="job-section-title">One-off Jobs</div>
-                    {% for job in jobs_list %}
-                        {% if job.one_off %}
-                            <button type="button" class="big-button job-button" onclick="updateJobDetails('{{ job.name }}')" style="background-color: {{ job.colour }}; color: black;">
-                                {{ job.name }}
-                                <div class="reward-box">{{ job.reward }}$</div>
-                            </button>
-                        {% endif %}
-                    {% endfor %}
-
-                    <input type="hidden" name="selected_job_name" id="selectedJobName" value="">
-                    <button type="submit" style="display: none;">Submit</button>
-                </form>
+                <div class="job-section-title">One-off Jobs</div>
+                {% for job in jobs_list %}
+                    {% if job.one_off %}
+                        <button type="button" class="big-button job-button" onclick="updateJobDetails('{{ job.name }}')" style="background-color: {{ job.colour }}; color: black;">
+                            {{ job.name }}
+                            <div class="reward-box">{{ job.reward }}$</div>
+                        </button>
+                    {% endif %}
+                {% endfor %}
             </div>
-            <div class="invisible-box"></div>
+        </div>
 
-        {% endif %}
+        <!-- Hidden form for submitting selected job details -->
+        <form method="post" action="{% url 'job_details' %}" id="jobForm">
+            {% csrf_token %}
+            <input type="hidden" name="selected_job_name" id="selectedJobName" value="">
+            <button type="submit" style="display: none;">Submit</button>
+        </form>
+
+        <div class="invisible-box"></div>
+    {% endif %}
 
 
 

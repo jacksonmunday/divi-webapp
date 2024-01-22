@@ -190,5 +190,29 @@
       "Brie"
     ],
     "formatted_date": "22 January 2024  at 15:27"
+  },
+  {
+    "job": {
+      "name": "new_one_off",
+      "description": "do<br>",
+      "reward": "20",
+      "cooldown": "0",
+      "last_completed": "2024_01_22_15_38_10",
+      "one_off": true,
+      "colour": "red"
+    },
+    "participants": [
+      "Jackson"
+    ],
+    "who_pays": [
+      "Olaf",
+      "Dan",
+      "Kelsey",
+      "yoooza",
+      "hello",
+      "Brie",
+      "Toby"
+    ],
+    "formatted_date": "22 January 2024  at 15:38"
   }
 ]
