@@ -78,10 +78,17 @@
                 <strong>Date:</strong> {{ completed_job.formatted_date }}
             </div>
 
-            <!-- Section for Reward -->
-            <div>
-                <strong>Reward:</strong> <span class="reward-box">${{ completed_job.job.reward }}</span>
-            </div>
+
+
+                <div>
+    {% for participant in completed_job.participants %}
+        <span style="margin-right: 10px;">
+            <strong>{{participant}}:</strong> <span class="reward-box">${{completed_job.shared_reward}}</span>
+        </span>
+    {% endfor %}
+</div>
+
+
         </div>
     {% endfor %}
 </div>

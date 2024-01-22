@@ -303,12 +303,16 @@ class CompletedJob:
         self.participants = participants
         self.who_pays = who_pays
         self.formatted_date = formatted_date
+        self.shared_reward = self.get_shared_reward()
         self.file_path = COMPLETED_JOBS_DATA_FILE_PATH
 
     def print_all(self):
         print(self.job)
         print(self.participants)
         print(self.who_pays)
+
+    def get_shared_reward(self):
+        return round(int(self.job.reward) / len(self.participants), 2)
 
     @classmethod
     def from_json_data(cls, json_data):
@@ -405,7 +409,7 @@ class Profile:
 
         self.rewards = self.get_current_rewards()
         self.loss = self.get_current_losses()
-        self.balance = round(self.rewards - self.loss, 1)
+        self.balance = round(self.rewards - self.loss, 2)
 
     def get_current_rewards(self):
         rewards = 0
@@ -414,7 +418,7 @@ class Profile:
             for participant in completed_job.participants:
                 if participant.lower() == self.name.lower():
                     rewards += int(completed_job.job.reward) / len(completed_job.participants)
-        return round(rewards, 1)
+        return round(rewards, 2)
 
     def get_current_losses(self):
         loss = 0
@@ -423,7 +427,7 @@ class Profile:
             for who_pays in completed_job.who_pays:
                 if who_pays.lower() == self.name.lower():
                     loss += int(completed_job.job.reward) / len(completed_job.who_pays)
-        return round(loss, 1)
+        return round(loss, 2)
 
 
 @require_POST
