@@ -146,8 +146,12 @@
             <div class="job-details-box">
     <p class="job-name">{{ selected_job_details.name }}</p>
     <p>Reward: <span class="reward-box">${{ selected_job_details.reward }}</span></p>
+
+                {% if selected_job_details.one_off|lower == 'false' %}
     <p>Cooldown: {{ selected_job_details.cooldown_formatted }}</p>
     <p>Last Completed: {{ selected_job_details.time_since_last_complete }}</p>
+                {% endif %}
+
 
     {% if selected_job_details.show_complete_button %}
         <div id="checklist"></div>

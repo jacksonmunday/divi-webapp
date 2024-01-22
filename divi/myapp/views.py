@@ -32,6 +32,14 @@ class Utils:
         pass
 
     @staticmethod
+    def convert_str_to_bool(string):
+        if string.lower() == 'false':
+            result = False
+        else:
+            result = bool(string)
+        return result
+
+    @staticmethod
     def get_date_time():
         return datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 
@@ -114,7 +122,7 @@ class Jobs:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 job = Job(row['name'], row['description'], row['reward'], row['cooldown'], row['last_completed'],
-                          row['one_off'])
+                          Utils.convert_str_to_bool(row['one_off']))
                 jobs_list.append(job)
         return self.sort_by_reward(jobs_list)
 
@@ -135,7 +143,7 @@ class Jobs:
             # Update jobs.csv with the new job
             with open(JOBS_FILE_PATH, 'a', newline='') as csvfile:
                 writer = csv.writer(csvfile)
-                writer.writerow([job.name, job.description, job.reward, job.cooldown, job.last_completed,job.one_off])
+                writer.writerow([job.name, job.description, job.reward, job.cooldown, job.last_completed, job.one_off])
         else:
             print("Job already exists")
 
@@ -149,10 +157,17 @@ class Jobs:
             time_difference = current_time - last_completed_time
             cooldown_hours = int(job.cooldown)
 
-            if time_difference.total_seconds() / 3600 < cooldown_hours:
-                job.colour = 'red'
+            if job.one_off:
+                if job.last_completed == '0001_01_01_00_00_00':
+                    job.colour = 'normal'
+                else:
+                    job.colour = 'red'
+
             else:
-                job.colour = 'normal'
+                if time_difference.total_seconds() / 3600 < cooldown_hours:
+                    job.colour = 'red'
+                else:
+                    job.colour = 'normal'
 
     def update_after_completed(self, job_name):
         """
@@ -516,8 +531,6 @@ def add_job(request):
         cooldown_hours = request.POST.get('cooldown_hours')
 
         one_off = request.POST.get('one_off', False)
-
-
 
         if name and description and reward and cooldown_weeks and cooldown_days and cooldown_hours:
             # Calculate cooldown in hours

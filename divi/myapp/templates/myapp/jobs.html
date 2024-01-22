@@ -100,17 +100,16 @@
                     {% csrf_token %}
                     <div class="job-section-title">Reoccurring Jobs</div>
                     {% for job in jobs_list %}
-                        {% if job.one_off|lower == 'false' %}
+                        {% if not job.one_off %}
                             <button type="button" class="big-button job-button" onclick="updateJobDetails('{{ job.name }}')" style="background-color: {{ job.colour }}; color: black;">
                                 {{ job.name }}
                                 <div class="reward-box">{{ job.reward }}$</div>
                             </button>
                         {% endif %}
                     {% endfor %}
-
                     <div class="job-section-title">One-off Jobs</div>
                     {% for job in jobs_list %}
-                        {% if job.one_off|lower == 'true' %}
+                        {% if job.one_off %}
                             <button type="button" class="big-button job-button" onclick="updateJobDetails('{{ job.name }}')" style="background-color: {{ job.colour }}; color: black;">
                                 {{ job.name }}
                                 <div class="reward-box">{{ job.reward }}$</div>
