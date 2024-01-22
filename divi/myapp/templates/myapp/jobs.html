@@ -89,11 +89,11 @@
         {% if selected_profile %}
 
             <!-- Add Job Button -->
-        <div class="text-center">
-            <a href="{% url 'add_job' %}" class="big-button job-button add-job-button">
+            <div class="text-center">
+                <a href="{% url 'add_job' %}" class="big-button job-button add-job-button">
                     Add Job
-            </a>
-        </div>
+                </a>
+            </div>
 
             <div class="text-center">
                 <form method="post" action="{% url 'job_details' %}" id="jobForm">
@@ -101,7 +101,7 @@
                     <div class="job-section-title">Reoccurring Jobs</div>
                     {% for job in jobs_list %}
                         {% if job.one_off|lower == 'false' %}
-                            <button type="button" class="big-button job-button" style="background-color: {{ job.colour }}; color: black;">
+                            <button type="button" class="big-button job-button" onclick="updateJobDetails('{{ job.name }}')" style="background-color: {{ job.colour }}; color: black;">
                                 {{ job.name }}
                                 <div class="reward-box">{{ job.reward }}$</div>
                             </button>
@@ -122,7 +122,7 @@
                     <button type="submit" style="display: none;">Submit</button>
                 </form>
             </div>
-        <div class="invisible-box"></div>
+            <div class="invisible-box"></div>
 
         {% endif %}
 
