@@ -7,6 +7,10 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'myapp/css/styles.css' %}">
     <style>
+    .cooldown-fields {
+            display: none;
+        }
+
 
     .checkbox-container {
         display: flex;
@@ -123,14 +127,14 @@
             <label for="reward">Reward ($):</label>
             <input type="number" name="reward" required min="0" step="0.01">
 
-            <label for="cooldown_weeks">Cooldown Weeks:</label>
-            <input type="number" name="cooldown_weeks" required min="0">
+            <label for="cooldown_weeks" class="cooldown-fields">Cooldown Weeks:</label>
+    <input type="number" name="cooldown_weeks" class="cooldown-fields" required min="0">
 
-            <label for="cooldown_days">Cooldown Days:</label>
-            <input type="number" name="cooldown_days" required min="0">
+    <label for="cooldown_days" class="cooldown-fields">Cooldown Days:</label>
+    <input type="number" name="cooldown_days" class="cooldown-fields" required min="0">
 
-            <label for="cooldown_hours">Cooldown Hours:</label>
-            <input type="number" name="cooldown_hours" required min="0" step="0.01">
+    <label for="cooldown_hours" class="cooldown-fields">Cooldown Hours:</label>
+    <input type="number" name="cooldown_hours" class="cooldown-fields" required min="0" step="0.01">
             <div class="invisible-box"></div>
 
             <button type="submit">Add Job</button>
@@ -151,45 +155,74 @@
     </div>
 
     <script>
-        function addDescriptionRow() {
-            var table = document.getElementById("descriptionTable");
-            var row = table.insertRow();
-            var cell = row.insertCell();
-            cell.contentEditable = true;
+
+    function setDefaultCooldownValues() {
+        document.querySelector('input[name="cooldown_weeks"]').value = 0;
+        document.querySelector('input[name="cooldown_days"]').value = 0;
+        document.querySelector('input[name="cooldown_hours"]').value = 0;
+    }
+
+    function addDescriptionRow() {
+        var table = document.getElementById("descriptionTable");
+        var row = table.insertRow();
+        var cell = row.insertCell();
+        cell.contentEditable = true;
+    }
+
+    function handleCheckbox(checkbox) {
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(function (cb) {
+                if (cb !== checkbox) {
+                    cb.checked = false;
+                }
+            });
+
+            // Check the checkboxes and enable/disable the button
+            checkCheckboxesAndToggleButton();
+            // Show/hide cooldown fields based on the state of the "Reoccurring" checkbox
+            toggleCooldownFields();
+            setDefaultCooldownValues();
         }
 
-        function handleCheckbox(checkbox) {
-        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(function (cb) {
-            if (cb !== checkbox) {
-                cb.checked = false;
-            }
-        });
+        function toggleCooldownFields() {
+            var reoccurringCheckbox = document.getElementById("reoccurringCheckbox");
+            var cooldownFields = document.querySelectorAll('.cooldown-fields');
 
-        // Check the checkboxes and enable/disable the button
-        checkCheckboxesAndToggleButton();
-    }
+            cooldownFields.forEach(function (field) {
+                field.style.display = reoccurringCheckbox.checked ? 'block' : 'none';
+            });
+
+            // If the checkbox is unchecked, clear the values in cooldown fields
+            if (!reoccurringCheckbox.checked) {
+                document.querySelector('input[name="cooldown_weeks"]').value = '';
+                document.querySelector('input[name="cooldown_days"]').value = '';
+                document.querySelector('input[name="cooldown_hours"]').value = '';
+            }
+        }
 
     function checkCheckboxesAndToggleButton() {
-    var oneOffCheckbox = document.getElementById("oneOffCheckbox");
-    var reoccurringCheckbox = document.getElementById("reoccurringCheckbox");
-    var addButton = document.querySelector('button[type="submit"]');
+        var oneOffCheckbox = document.getElementById("oneOffCheckbox");
+        var reoccurringCheckbox = document.getElementById("reoccurringCheckbox");
+        var addButton = document.querySelector('button[type="submit"]');
 
-    if (oneOffCheckbox.checked || reoccurringCheckbox.checked) {
-        addButton.removeAttribute("disabled");
-    } else {
-        addButton.setAttribute("disabled", "true");
+        if (oneOffCheckbox.checked || reoccurringCheckbox.checked) {
+            addButton.removeAttribute("disabled");
+        } else {
+            addButton.setAttribute("disabled", "true");
+        }
+
+        // Set the corresponding parameter in views.py
+        var oneOffParameter = document.querySelector('input[name="one_off"]');
+        var reoccurringParameter = document.querySelector('input[name="reoccurring"]');
+
+        oneOffParameter.value = oneOffCheckbox.checked ? 'True' : 'False';
+        reoccurringParameter.value = reoccurringCheckbox.checked ? 'True' : 'False';
+
+        // Toggle cooldown fields visibility
+        toggleCooldownFields();
     }
 
-    // Set the corresponding parameter in views.py
-    var oneOffParameter = document.querySelector('input[name="one_off"]');
-    var reoccurringParameter = document.querySelector('input[name="reoccurring"]');
-
-    oneOffParameter.value = oneOffCheckbox.checked ? 'True' : 'False';
-    reoccurringParameter.value = reoccurringCheckbox.checked ? 'True' : 'False';
-}
-
-    // Initial check to set the button state on page load
+    // Initial check to set the button state and toggle cooldown fields on page load
     checkCheckboxesAndToggleButton();
 
     // Function to update the hidden textarea with table content before form submission
@@ -208,7 +241,7 @@
             }
         }
     });
-    </script>
+</script>
 </body>
 </html>
 
