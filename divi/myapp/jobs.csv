@@ -1,11 +1,11 @@
 name,description,reward,cooldown,last_completed,one_off
-Empty indoor veggie bin,<br>Must be full<br>,1,0,2024_01_21_19_43_11,False
+Empty indoor veggie bin,<br>Must be full<br>,1,0,2024_01_22_16_03_11,False
 Empty indoor recycling,<br>Must be full<br>,1,0,2024_01_21_19_40_58,False
 Empty indoor rubbish,<br>Must be full<br>,1,0,2024_01_21_20_04_29,False
 1212,1<br>2<br>,1,193,2024_01_18_17_26_27,False
 testing job,do this<br>,1,193,2024_01_22_14_33_10,True
 long title long titlelong titlelong titlelong titlelong titlelong titlelong titlelong titlelong titlelong title,<br>,1,0,2024_01_22_15_58_39,True
-Empty dishwasher,<br>,2,0,2024_01_22_16_08_14,False
+Empty dishwasher,<br>,2,0,2024_01_22_16_44_34,False
 Wheelie bins,Take out<br>Take back in<br>,2,0,2024_01_22_13_12_01,False
 Clean Fireplace ,Empty ashes<br>Vacuum mess<br>,2,168,2024_01_19_13_26_02,False
 assfas,sa<br>,3,579,2024_01_22_11_39_39,False
@@ -21,5 +21,6 @@ testing,test<br>,10,0,2024_01_22_16_09_23,False
 new job,10<br>,10,1930,2024_01_22_13_12_27,False
 test23e1e1,cecsdfas<br>,10,0,2024_01_22_15_12_43,True
 testing one off,do<br>do this too<br>,10,0,2024_01_22_15_27_37,True
+new job test,do this<br>,10,168,0001_01_01_00_00_00,False
 Kill all driveway weeds,<br>,15,672,2024_01_09_00_07_35,True
 new_one_off,do<br>,20,0,2024_01_22_15_38_10,True
