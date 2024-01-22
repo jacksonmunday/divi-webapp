@@ -46,5 +46,53 @@
       "yoooza"
     ],
     "formatted_date": "22 January 2024  at 11:39"
+  },
+  {
+    "job": {
+      "name": "Wheelie bins",
+      "description": "Take out<br>Take back in<br>",
+      "reward": "2",
+      "cooldown": "0",
+      "last_completed": "2024_01_22_13_12_01",
+      "one_off": "false",
+      "colour": "normal"
+    },
+    "participants": [
+      "Brie"
+    ],
+    "who_pays": [
+      "Dan",
+      "Toby",
+      "Olaf",
+      "Jackson",
+      "Kelsey",
+      "hello",
+      "yoooza"
+    ],
+    "formatted_date": "22 January 2024  at 13:12"
+  },
+  {
+    "job": {
+      "name": "new job",
+      "description": "10<br>",
+      "reward": "10",
+      "cooldown": "1930",
+      "last_completed": "2024_01_22_13_12_27",
+      "one_off": "False",
+      "colour": "red"
+    },
+    "participants": [
+      "Brie"
+    ],
+    "who_pays": [
+      "Dan",
+      "Toby",
+      "Olaf",
+      "Jackson",
+      "Kelsey",
+      "hello",
+      "yoooza"
+    ],
+    "formatted_date": "22 January 2024  at 13:12"
   }
 ]

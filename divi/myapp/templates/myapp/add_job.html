@@ -7,6 +7,22 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'myapp/css/styles.css' %}">
     <style>
+
+    .checkbox-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px; /* Adjust as needed */
+    }
+
+    .checkbox-container input[type="checkbox"] {
+        width: 30px; /* Adjust as needed */
+        height: 30px; /* Adjust as needed */
+        margin-right: 5px; /* Adjust as needed */
+    }
+
+    .checkbox-container label.checkbox-label {
+        display: inline-block;
+    }
         .container {
             text-align: center;
         }
@@ -80,6 +96,18 @@
             <label for="name">Job Name:</label>
             <input type="text" name="name" required>
 
+
+            <div class="checkbox-container">
+    <input type="checkbox" name="one_off" id="oneOffCheckbox" onclick="handleCheckbox(this)">
+    <label class="checkbox-label" for="oneOffCheckbox">One Off</label>
+</div>
+
+<div class="checkbox-container">
+    <input type="checkbox" name="reoccurring" id="reoccurringCheckbox" onclick="handleCheckbox(this)">
+    <label class="checkbox-label" for="reoccurringCheckbox">Reoccurring</label>
+</div>
+
+
             <label for="description">Checklist:</label>
             <div>
                 <table id="descriptionTable">
@@ -130,22 +158,56 @@
             cell.contentEditable = true;
         }
 
-        // Function to update the hidden textarea with table content before form submission
-        document.querySelector('form').addEventListener('submit', function() {
-            var table = document.getElementById("descriptionTable");
-            var textarea = document.getElementById("descriptionTextarea");
-            var rows = table.getElementsByTagName("tr");
-
-            // Reset the textarea content
-            textarea.value = "";
-
-            for (var i = 0; i < rows.length; i++) {
-                var cells = rows[i].getElementsByTagName("td");
-                for (var j = 0; j < cells.length; j++) {
-                    textarea.value += cells[j].innerText + "\n";
-                }
+        function handleCheckbox(checkbox) {
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(function (cb) {
+            if (cb !== checkbox) {
+                cb.checked = false;
             }
         });
+
+        // Check the checkboxes and enable/disable the button
+        checkCheckboxesAndToggleButton();
+    }
+
+    function checkCheckboxesAndToggleButton() {
+    var oneOffCheckbox = document.getElementById("oneOffCheckbox");
+    var reoccurringCheckbox = document.getElementById("reoccurringCheckbox");
+    var addButton = document.querySelector('button[type="submit"]');
+
+    if (oneOffCheckbox.checked || reoccurringCheckbox.checked) {
+        addButton.removeAttribute("disabled");
+    } else {
+        addButton.setAttribute("disabled", "true");
+    }
+
+    // Set the corresponding parameter in views.py
+    var oneOffParameter = document.querySelector('input[name="one_off"]');
+    var reoccurringParameter = document.querySelector('input[name="reoccurring"]');
+
+    oneOffParameter.value = oneOffCheckbox.checked ? 'True' : 'False';
+    reoccurringParameter.value = reoccurringCheckbox.checked ? 'True' : 'False';
+}
+
+    // Initial check to set the button state on page load
+    checkCheckboxesAndToggleButton();
+
+    // Function to update the hidden textarea with table content before form submission
+    document.querySelector('form').addEventListener('submit', function () {
+        var table = document.getElementById("descriptionTable");
+        var textarea = document.getElementById("descriptionTextarea");
+        var rows = table.getElementsByTagName("tr");
+
+        // Reset the textarea content
+        textarea.value = "";
+
+        for (var i = 0; i < rows.length; i++) {
+            var cells = rows[i].getElementsByTagName("td");
+            for (var j = 0; j < cells.length; j++) {
+                textarea.value += cells[j].innerText + "\n";
+            }
+        }
+    });
     </script>
 </body>
 </html>

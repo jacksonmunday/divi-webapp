@@ -502,6 +502,7 @@ def scores_details(request, selected_profile):
 
 def add_job(request):
     LogData(request).update_user_data()
+
     if request.method == 'POST':
         name = request.POST.get('name')
 
@@ -514,11 +515,18 @@ def add_job(request):
         cooldown_days = request.POST.get('cooldown_days')
         cooldown_hours = request.POST.get('cooldown_hours')
 
+        one_off = request.POST.get('one_off', False)
+
+
+
         if name and description and reward and cooldown_weeks and cooldown_days and cooldown_hours:
             # Calculate cooldown in hours
             cooldown_in_hours = int(cooldown_weeks) * 7 * 24 + int(cooldown_days) * 24 + int(cooldown_hours)
 
-            new_job = Job(name, description, reward, cooldown_in_hours, '0001_01_01_00_00_00', False)
+            # Create the Job instance with the one_off parameter
+            new_job = Job(name, description, reward, cooldown_in_hours, '0001_01_01_00_00_00', one_off)
+
+            # Add the new job
             Jobs().add_new_job(new_job)
 
             return redirect('jobs')  # Redirect to jobs page after adding the job
