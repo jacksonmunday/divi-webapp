@@ -147,11 +147,13 @@
     <p class="job-name">{{ selected_job_details.name }}</p>
     <p>Reward: <span class="reward-box">${{ selected_job_details.reward }}</span></p>
 
-                {% if selected_job_details.one_off|lower == 'false' %}
-    <p>Cooldown: {{ selected_job_details.cooldown_formatted }}</p>
                 {% if not selected_job_details.last_completed == '0001_01_01_00_00_00' %}
     <p>Last Completed: {{ selected_job_details.time_since_last_complete }}</p>
                 {% endif %}
+
+                {% if not selected_job_details.cooldown == '0' %}
+    <p>Cooldown: {{ selected_job_details.cooldown_formatted }}</p>
+
                 <p>Wait Time: {{ selected_job_details.hours_until_ready }} hours</p>
                 {% endif %}
 

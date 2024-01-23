@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="{% static 'myapp/css/styles.css' %}">
     <style>
 
+
+    .reward-box {
+            background-color: #ffd700; /* Yellow color */
+            color: #000; /* Black text color */
+            padding: 3px 6px; /* Adjust padding as needed */
+            border-radius: 5px; /* Rounded corners */
+            display: inline-block;
+        }
         /* Add this style for gradient slider color */
     input[type="range"] {
         -webkit-appearance: none;
@@ -140,25 +148,19 @@
             <label for="completion_time">Job Completion time (Minutes):</label>
 <input type="number" name="completion_time" required min="0">
 
-<label for="difficulty">Difficulty:</label>
+<label for="difficulty">Difficulty: <span id="currentDifficulty">0</span></label>
 <div style="display: flex; justify-content: space-between;">
     <span>Low</span>
     <input type="range" name="difficulty" min="0" max="10" value="0" oninput="updateDifficulty()">
     <span>High</span>
-</div>
-<span id="currentDifficulty">0</span>
 
-
-
-            <div class="checkbox-container">
-    <input type="checkbox" name="one_off" id="oneOffCheckbox" onclick="handleCheckbox(this)">
-    <label class="checkbox-label" for="oneOffCheckbox">One Off</label>
 </div>
 
-<div class="checkbox-container">
-    <input type="checkbox" name="reoccurring" id="reoccurringCheckbox" onclick="handleCheckbox(this)">
-    <label class="checkbox-label" for="reoccurringCheckbox">Reoccurring</label>
-</div>
+
+<div class="reward-box">Recommended Reward: $<span id="recommendedRewardValue"></span><span id="recommendedRewardValue"></span></div>
+
+            <label for="reward">Reward ($):</label>
+            <input type="number" name="reward" required min="0" step="0.01">
 
 
             <label for="description">Checklist:</label>
@@ -173,8 +175,16 @@
 
             <button type="button" onclick="addDescriptionRow()" style="background-color: grey; color: white;">Add Row</button>
 
-            <label for="reward">Reward ($):</label>
-            <input type="number" name="reward" required min="0" step="0.01">
+            <div class="checkbox-container">
+    <input type="checkbox" name="one_off" id="oneOffCheckbox" onclick="handleCheckbox(this)">
+    <label class="checkbox-label" for="oneOffCheckbox">One Off</label>
+</div>
+
+<div class="checkbox-container">
+    <input type="checkbox" name="reoccurring" id="reoccurringCheckbox" onclick="handleCheckbox(this)">
+    <label class="checkbox-label" for="reoccurringCheckbox">Reoccurring</label>
+</div>
+
 
             <label for="cooldown_weeks" class="cooldown-fields">Cooldown Weeks:</label>
     <input type="number" name="cooldown_weeks" class="cooldown-fields" required min="0">
@@ -184,6 +194,7 @@
 
     <label for="cooldown_hours" class="cooldown-fields">Cooldown Hours:</label>
     <input type="number" name="cooldown_hours" class="cooldown-fields" required min="0" step="0.01">
+
             <div class="invisible-box"></div>
 
             <button type="submit">Add Job</button>
@@ -204,6 +215,30 @@
     </div>
 
     <script>
+
+    // Update the calculateRecommendedReward function
+function calculateRecommendedReward() {
+    var completionTime = parseInt(document.querySelector('input[name="completion_time"]').value, 10);
+    var difficulty = parseInt(document.querySelector('input[name="difficulty"]').value, 10);
+
+    // Make an AJAX request to the Django view
+    fetch(`/calculate_recommended_reward/?completion_time=${completionTime}&difficulty=${difficulty}`)
+        .then(response => response.json())
+        .then(data => {
+            // Update the recommended reward label
+            document.getElementById("recommendedRewardValue").innerText = data.recommended_reward.toFixed(2);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+// Add event listeners to call the function when completion time or difficulty changes
+document.querySelector('input[name="completion_time"]').addEventListener('input', calculateRecommendedReward);
+document.querySelector('input[name="difficulty"]').addEventListener('input', calculateRecommendedReward);
+
+// Call the function on page load
+calculateRecommendedReward();
 
     function updateDifficulty() {
         var difficultySlider = document.querySelector('input[name="difficulty"]');

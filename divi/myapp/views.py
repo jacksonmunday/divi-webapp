@@ -1,4 +1,6 @@
 import json
+
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 import csv
@@ -24,6 +26,15 @@ else:
 
 
 # ----------------------------------------------------------------------------------------------------------------------
+
+def calculate_recommended_reward(request):
+    completion_time = int(request.GET.get('completion_time', 0))
+    difficulty = int(request.GET.get('difficulty', 0))
+
+    # Replace the following line with your actual calculation logic from Python code
+    recommended_reward = Utils().get_r_reward(completion_time, difficulty)
+
+    return JsonResponse({'recommended_reward': recommended_reward})
 
 
 class Utils:
@@ -71,12 +82,25 @@ class Utils:
 
     @staticmethod
     def show_complete_button(selected_job_details):
-        last_completed_time = datetime.strptime(selected_job_details.last_completed, "%Y_%m_%d_%H_%M_%S")
-        current_time = datetime.now()
-        time_difference = current_time - last_completed_time
-        cooldown_hours = int(selected_job_details.cooldown)
+        if selected_job_details.one_off:
+            if selected_job_details.last_completed == '0001_01_01_00_00_00':
+                return True
+            else:
+                return False
+        else:
+            last_completed_time = datetime.strptime(selected_job_details.last_completed, "%Y_%m_%d_%H_%M_%S")
+            current_time = datetime.now()
+            time_difference = current_time - last_completed_time
+            cooldown_hours = int(selected_job_details.cooldown)
 
         return time_difference.total_seconds() / 3600 > cooldown_hours
+
+    @staticmethod
+    def get_r_reward(completion_time, difficulty):
+
+        reward_1 = completion_time * 0.2 + difficulty * 0.3 + 0.3
+
+        return reward_1
 
 
 class LogData:
@@ -126,7 +150,7 @@ class Jobs:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 job = Job(row['name'], row['description'], row['reward'], row['cooldown'], row['last_completed'],
-                          Utils.convert_str_to_bool(row['one_off']))
+                          Utils.convert_str_to_bool(row['one_off']), row['completion_time'], row['difficulty'])
                 jobs_list.append(job)
         return self.sort_by_reward(jobs_list)
 
@@ -147,7 +171,8 @@ class Jobs:
             # Update jobs.csv with the new job
             with open(JOBS_FILE_PATH, 'a', newline='') as csvfile:
                 writer = csv.writer(csvfile)
-                writer.writerow([job.name, job.description, job.reward, job.cooldown, job.last_completed, job.one_off])
+                writer.writerow([job.name, job.description, job.reward, job.cooldown, job.last_completed, job.one_off,
+                                 job.completion_time, job.difficulty])
         else:
             print("Job already exists")
 
@@ -198,7 +223,8 @@ class Jobs:
 
     def update_csv_from_object_list(self):
         with open(self.file_path, 'w', newline='') as csvfile:
-            fieldnames = ['name', 'description', 'reward', 'cooldown', 'last_completed', 'one_off']
+            fieldnames = ['name', 'description', 'reward', 'cooldown', 'last_completed', 'one_off', 'completion_time',
+                          'difficulty']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
             writer.writeheader()
@@ -211,32 +237,33 @@ class Jobs:
                     'cooldown': job.cooldown,
                     'last_completed': job.last_completed,
                     'one_off': job.one_off,
+                    'completion_time': job.completion_time,
+                    'difficulty': job.difficulty
                 })
 
     @staticmethod
     def sort_by_reward(jobs_list):
         # Use the sorted function to sort the list based on the 'reward' key
-        sorted_list = sorted(jobs_list, key=lambda x: int(x.reward))
+        sorted_list = sorted(jobs_list, key=lambda x: x.reward)
         return sorted_list
 
 
 class Job:
-    def __init__(self, name, description, reward, cooldown, last_completed, one_off):
+    def __init__(self, name, description, reward, cooldown, last_completed, one_off, completion_time, difficulty):
         self.name = name
         self.description = description
         self.reward = reward
         self.cooldown = cooldown
         self.last_completed = last_completed
         self.one_off = one_off
+        self.completion_time = completion_time
+        self.difficulty = difficulty
 
         self.colour = 'normal'
         self.cooldown_formatted = None
         self.time_since_last_complete = None
         self.show_complete_button = None
         self.hours_until_ready = None
-
-    def print_job(self):
-        print(self.name, self.description, self.reward, self.cooldown, self.last_completed, self.one_off)
 
 
 class CompletedJobs:
@@ -324,6 +351,8 @@ class CompletedJob:
             job_data.get("cooldown", ""),
             job_data.get("last_completed", ""),
             job_data.get("one_off", ""),
+            job_data.get("completion_time", ""),
+            job_data.get("difficulty", ""),
         )
         participants = json_data.get("participants", [])
         who_pays = json_data.get("who_pays", [])
@@ -549,15 +578,17 @@ def add_job(request):
         cooldown_weeks = request.POST.get('cooldown_weeks')
         cooldown_days = request.POST.get('cooldown_days')
         cooldown_hours = request.POST.get('cooldown_hours')
-
         one_off = request.POST.get('one_off', False)
+        completion_time = request.POST.get('completion_time')
+        difficulty = request.POST.get('difficulty')
 
         if name and description and reward and cooldown_weeks and cooldown_days and cooldown_hours:
             # Calculate cooldown in hours
             cooldown_in_hours = int(cooldown_weeks) * 7 * 24 + int(cooldown_days) * 24 + int(cooldown_hours)
 
             # Create the Job instance with the one_off parameter
-            new_job = Job(name, description, reward, cooldown_in_hours, '0001_01_01_00_00_00', one_off)
+            new_job = Job(name, description, reward, cooldown_in_hours, '0001_01_01_00_00_00', one_off, completion_time,
+                          difficulty)
 
             # Add the new job
             Jobs().add_new_job(new_job)
