@@ -34,7 +34,10 @@
       "colour": "white"
     },
     "participants": [
-      "Dan","Jackson","dodds","yozza"
+      "Dan",
+      "Jackson",
+      "dodds",
+      "yozza"
     ],
     "who_pays": [
       "Jackson",
@@ -70,5 +73,29 @@
       "Brie"
     ],
     "formatted_date": "22 January 2024  at 16:21"
+  },
+  {
+    "job": {
+      "name": "Wheelie bins",
+      "description": "Take out<br>Take back in<br>",
+      "reward": "2",
+      "cooldown": "0",
+      "last_completed": "2024_01_23_08_10_24",
+      "one_off": false,
+      "colour": "white"
+    },
+    "participants": [
+      "Kelsey"
+    ],
+    "who_pays": [
+      "Jackson",
+      "yoooza",
+      "Dan",
+      "hello",
+      "Toby",
+      "Brie",
+      "Olaf"
+    ],
+    "formatted_date": "23 January 2024  at 8:10"
   }
 ]

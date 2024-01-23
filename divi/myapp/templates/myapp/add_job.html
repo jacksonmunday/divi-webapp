@@ -7,6 +7,43 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'myapp/css/styles.css' %}">
     <style>
+
+        /* Add this style for gradient slider color */
+    input[type="range"] {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 10px;
+        background: linear-gradient(to right, green, yellow, red);
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+    }
+
+    input[type="range"]:hover {
+        opacity: 1;
+    }
+
+    /* Modify this style for gradient slider color */
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 15px;
+        height: 15px;
+        background-color: #fff; /* Thumb color */
+        cursor: pointer;
+        border-radius: 50%;
+    }
+
+    /* Modify this style for gradient slider color */
+    input[type="range"]::-moz-range-thumb {
+        width: 15px;
+        height: 15px;
+        background-color: #4CAF50; /* Thumb color */
+        cursor: pointer;
+        border-radius: 50%;
+    }
+
     .cooldown-fields {
             display: none;
         }
@@ -100,6 +137,18 @@
             <label for="name">Job Name:</label>
             <input type="text" name="name" required>
 
+            <label for="completion_time">Job Completion time (Minutes):</label>
+<input type="number" name="completion_time" required min="0">
+
+<label for="difficulty">Difficulty:</label>
+<div style="display: flex; justify-content: space-between;">
+    <span>Low</span>
+    <input type="range" name="difficulty" min="0" max="10" value="0" oninput="updateDifficulty()">
+    <span>High</span>
+</div>
+<span id="currentDifficulty">0</span>
+
+
 
             <div class="checkbox-container">
     <input type="checkbox" name="one_off" id="oneOffCheckbox" onclick="handleCheckbox(this)">
@@ -155,6 +204,12 @@
     </div>
 
     <script>
+
+    function updateDifficulty() {
+        var difficultySlider = document.querySelector('input[name="difficulty"]');
+        var currentDifficultySpan = document.getElementById("currentDifficulty");
+        currentDifficultySpan.innerText = difficultySlider.value;
+    }
 
     function setDefaultCooldownValues() {
         document.querySelector('input[name="cooldown_weeks"]').value = 0;
