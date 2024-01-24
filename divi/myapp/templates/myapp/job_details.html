@@ -152,7 +152,9 @@
                 {% if not selected_job_details.last_completed == '0001_01_01_00_00_00' %}
     <p>Last Completed: {{ selected_job_details.time_since_last_complete }}</p>
                 {% endif %}
+                {% if not selected_job_details.show_complete_button %}
                 <p>Wait Time: {{ selected_job_details.hours_until_ready }} hours</p>
+                {% endif %}
                 {% endif %}
 
 
