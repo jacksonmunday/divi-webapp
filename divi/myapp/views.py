@@ -338,6 +338,8 @@ class CompletedJob:
             job_data.get("cooldown", ""),
             job_data.get("last_completed", ""),
             job_data.get("one_off", ""),
+            job_data.get("time_taken", ""),
+            job_data.get("difficulty", ""),
         )
         participants = json_data.get("participants", [])
         who_pays = json_data.get("who_pays", [])
