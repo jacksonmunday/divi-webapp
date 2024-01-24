@@ -275,7 +275,9 @@ class CompletedJobs:
                 "cooldown": completed_job.job.cooldown,
                 "last_completed": completed_job.job.last_completed,
                 "one_off": completed_job.job.one_off,
-                "colour": completed_job.job.colour
+                "colour": completed_job.job.colour,
+                "time_taken": completed_job.job.time_taken,
+                "difficulty": completed_job.job.difficulty
             },
             "participants": completed_job.participants,
             "who_pays": completed_job.who_pays,
