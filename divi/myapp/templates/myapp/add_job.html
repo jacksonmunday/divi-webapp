@@ -137,19 +137,6 @@
             <label for="name">Job Name:</label>
             <input type="text" name="name" required>
 
-            <label for="completion_time">Job Completion time (Minutes):</label>
-<input type="number" name="completion_time" required min="0">
-
-<label for="difficulty">Difficulty:</label>
-<div style="display: flex; justify-content: space-between;">
-    <span>Low</span>
-    <input type="range" name="difficulty" min="0" max="10" value="0" oninput="updateDifficulty()">
-    <span>High</span>
-</div>
-<span id="currentDifficulty">0</span>
-
-
-
             <div class="checkbox-container">
     <input type="checkbox" name="one_off" id="oneOffCheckbox" onclick="handleCheckbox(this)">
     <label class="checkbox-label" for="oneOffCheckbox">One Off</label>

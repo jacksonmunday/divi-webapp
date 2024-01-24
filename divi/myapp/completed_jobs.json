@@ -121,5 +121,29 @@
       "Kelsey"
     ],
     "formatted_date": "25 January 2024  at 10:33"
+  },
+  {
+    "job": {
+      "name": "test new job added",
+      "description": "do<br>",
+      "reward": "10",
+      "cooldown": "0",
+      "last_completed": "2024_01_25_11_03_36",
+      "one_off": true,
+      "colour": "red"
+    },
+    "participants": [
+      "Jackson"
+    ],
+    "who_pays": [
+      "Olaf",
+      "Kelsey",
+      "yoooza",
+      "Toby",
+      "Brie",
+      "Dan",
+      "hello"
+    ],
+    "formatted_date": "25 January 2024  at 11:03"
   }
 ]
