@@ -600,3 +600,8 @@ def add_profile(request):
             messages.error(request, 'Invalid form submission. Please try again.')
 
     return render(request, 'myapp/add_profile.html')
+
+
+def difficulty(request):
+
+    return render(request, 'myapp/difficulty.html')
