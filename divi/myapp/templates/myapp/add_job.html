@@ -137,6 +137,9 @@
             <label for="name">Job Name:</label>
             <input type="text" name="name" required>
 
+            <label for="time_taken">Completion Time (Minutes):</label>
+<input type="number" name="time_taken" min="0" required>
+
             <div class="checkbox-container">
     <input type="checkbox" name="one_off" id="oneOffCheckbox" onclick="handleCheckbox(this)">
     <label class="checkbox-label" for="oneOffCheckbox">One Off</label>
@@ -191,12 +194,6 @@
     </div>
 
     <script>
-
-    function updateDifficulty() {
-        var difficultySlider = document.querySelector('input[name="difficulty"]');
-        var currentDifficultySpan = document.getElementById("currentDifficulty");
-        currentDifficultySpan.innerText = difficultySlider.value;
-    }
 
     function setDefaultCooldownValues() {
         document.querySelector('input[name="cooldown_weeks"]').value = 0;

@@ -126,7 +126,7 @@ class Jobs:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 job = Job(row['name'], row['description'], row['reward'], row['cooldown'], row['last_completed'],
-                          Utils.convert_str_to_bool(row['one_off']))
+                          Utils.convert_str_to_bool(row['one_off']), row['time_taken'], row['difficulty'])
                 jobs_list.append(job)
         return self.sort_by_reward(jobs_list)
 
@@ -147,7 +147,7 @@ class Jobs:
             # Update jobs.csv with the new job
             with open(JOBS_FILE_PATH, 'a', newline='') as csvfile:
                 writer = csv.writer(csvfile)
-                writer.writerow([job.name, job.description, job.reward, job.cooldown, job.last_completed, job.one_off])
+                writer.writerow([job.name, job.description, job.reward, job.cooldown, job.last_completed, job.one_off,job.time_taken,job.difficulty])
         else:
             print("Job already exists")
 
@@ -171,7 +171,6 @@ class Jobs:
                 if hours_since_last_completed < cooldown_hours:
                     # Calculate the ratio between cooldown and hours_since_last_completed
                     ratio = hours_since_last_completed / cooldown_hours
-
 
                     # Map the ratio to a color between red and light orange
                     red_value = 255
@@ -208,7 +207,8 @@ class Jobs:
 
     def update_csv_from_object_list(self):
         with open(self.file_path, 'w', newline='') as csvfile:
-            fieldnames = ['name', 'description', 'reward', 'cooldown', 'last_completed', 'one_off']
+            fieldnames = ['name', 'description', 'reward', 'cooldown', 'last_completed', 'one_off', 'time_taken',
+                          'difficulty']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
             writer.writeheader()
@@ -221,6 +221,8 @@ class Jobs:
                     'cooldown': job.cooldown,
                     'last_completed': job.last_completed,
                     'one_off': job.one_off,
+                    'time_taken': job.time_taken,
+                    'difficulty': job.difficulty
                 })
 
     @staticmethod
@@ -231,13 +233,15 @@ class Jobs:
 
 
 class Job:
-    def __init__(self, name, description, reward, cooldown, last_completed, one_off):
+    def __init__(self, name, description, reward, cooldown, last_completed, one_off, time_taken, difficulty):
         self.name = name
         self.description = description
         self.reward = reward
         self.cooldown = cooldown
         self.last_completed = last_completed
         self.one_off = one_off
+        self.time_taken = time_taken
+        self.difficulty = difficulty
 
         self.colour = 'normal'
         self.cooldown_formatted = None
@@ -559,6 +563,8 @@ def add_job(request):
         cooldown_weeks = request.POST.get('cooldown_weeks')
         cooldown_days = request.POST.get('cooldown_days')
         cooldown_hours = request.POST.get('cooldown_hours')
+        time_taken = request.POST.get('time_taken')
+        difficulty = 10
 
         one_off = request.POST.get('one_off', False)
 
@@ -567,7 +573,7 @@ def add_job(request):
             cooldown_in_hours = int(cooldown_weeks) * 7 * 24 + int(cooldown_days) * 24 + int(cooldown_hours)
 
             # Create the Job instance with the one_off parameter
-            new_job = Job(name, description, reward, cooldown_in_hours, '0001_01_01_00_00_00', one_off)
+            new_job = Job(name, description, reward, cooldown_in_hours, '0001_01_01_00_00_00', one_off, time_taken, difficulty)
 
             # Add the new job
             Jobs().add_new_job(new_job)
