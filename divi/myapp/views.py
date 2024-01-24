@@ -158,7 +158,7 @@ class Jobs:
         for job in self.jobs_list:
             last_completed_time = datetime.strptime(job.last_completed, "%Y_%m_%d_%H_%M_%S")
             current_time = datetime.now()
-            time_difference = current_time - last_completed_time
+            hours_since_last_completed = ((current_time - last_completed_time).total_seconds()) / 3600
             cooldown_hours = int(job.cooldown)
 
             if job.one_off:
@@ -168,8 +168,18 @@ class Jobs:
                     job.colour = 'red'
 
             else:
-                if time_difference.total_seconds() / 3600 < cooldown_hours:
-                    job.colour = 'red'
+                if hours_since_last_completed < cooldown_hours:
+                    # Calculate the ratio between cooldown and hours_since_last_completed
+                    ratio = hours_since_last_completed / cooldown_hours
+
+
+                    # Map the ratio to a color between red and light orange
+                    red_value = 255
+                    green_value = int(ratio * 220)  # Constant for orange color
+                    blue_value = int(ratio * 220)  # Constant for orange color
+
+                    # Convert RGB values to hex
+                    job.colour = "#{:02X}{:02X}{:02X}".format(red_value, green_value, blue_value)
                 else:
                     job.colour = 'white'
 

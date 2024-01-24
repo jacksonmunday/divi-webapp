@@ -97,5 +97,29 @@
       "Olaf"
     ],
     "formatted_date": "23 January 2024  at 8:10"
+  },
+  {
+    "job": {
+      "name": "new tes of job",
+      "description": "<br>",
+      "reward": "10",
+      "cooldown": "0",
+      "last_completed": "2024_01_25_10_33_28",
+      "one_off": true,
+      "colour": "red"
+    },
+    "participants": [
+      "Jackson"
+    ],
+    "who_pays": [
+      "Dan",
+      "Olaf",
+      "Toby",
+      "hello",
+      "yoooza",
+      "Brie",
+      "Kelsey"
+    ],
+    "formatted_date": "25 January 2024  at 10:33"
   }
 ]
