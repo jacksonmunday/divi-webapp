@@ -172,7 +172,6 @@ class Jobs:
                     # Calculate the ratio between cooldown and hours_since_last_completed
                     ratio = hours_since_last_completed / cooldown_hours
 
-
                     # Map the ratio to a color between red and light orange
                     red_value = 255
                     green_value = int(ratio * 220)  # Constant for orange color
@@ -413,6 +412,21 @@ class Profiles:
         print(f"Profile with name '{name}' not found.")
         return None
 
+    def update_votes(self, profile_object):
+        try:
+            with open(self.profiles_file_path, 'r') as json_file:
+                data = json.load(json_file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            data = []
+
+        for entry in data:
+            if entry['name'] == profile_object.name:
+                entry['votes'] = profile_object.votes
+                break
+
+        with open(self.profiles_file_path, 'w') as json_file:
+            json.dump(data, json_file, indent=2)
+
 
 class Profile:
     def __init__(self, name):
@@ -442,6 +456,9 @@ class Profile:
                     loss += int(completed_job.job.reward) / len(completed_job.who_pays)
         return round(loss, 2)
 
+    def add_reward_vote(self, job_name, vote):
+        self.votes.append([job_name, vote])
+
 
 @require_POST
 def complete_job(request):
@@ -470,6 +487,11 @@ def jobs(request):  # GOOD
     LogData(request).update_user_data()
     selected_profile = request.session.get('selected_profile', None)
     jobs_list = Jobs().jobs_list
+
+    for profile in Profiles().list_of_objects:
+        if profile.name.lower() == request.session.get('selected_profile', None).lower():
+            if len(profile.votes) != len(jobs_list):
+                return redirect('voting')
 
     if request.method == 'POST':
         selected_profile = request.POST.get('selected_profile', None)
@@ -538,6 +560,21 @@ def scores(request):
     LogData(request).update_user_data()
     profiles_ = Profiles().list_of_objects
     return render(request, 'myapp/scores.html', {'profiles': profiles_})
+
+
+def voting(request):
+    selected_profile = request.session.get('selected_profile', None)
+    jobs_list = Jobs().jobs_list
+    return render(request, 'myapp/voting.html', {'selected_profile': selected_profile, 'jobs_list': jobs_list})
+
+
+def submit_prices(request):
+    # Handle form submission to process the submitted prices
+    # You can access the submitted data using request.POST
+    print("test")
+    # Process the data and perform necessary actions
+    # Redirect the user to the desired page (e.g., 'jobs')
+    return redirect('jobs')  # Assuming 'jobs' is the name of the desired page
 
 
 def scores_details(request, selected_profile):

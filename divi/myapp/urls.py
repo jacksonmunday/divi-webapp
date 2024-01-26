@@ -29,7 +29,9 @@ urlpatterns = [
     path('complete_job/', views.complete_job, name='complete_job'),
     path('scores_details/<str:selected_profile>/', views.scores_details, name='scores_details'),
     path('add_job/', views.add_job, name='add_job'),
-    path('add_profile/', views.add_profile, name='add_profile')
+    path('add_profile/', views.add_profile, name='add_profile'),
+    path('voting/', views.voting, name='voting'),
+    path('submit_prices/', views.submit_prices, name='submit_prices'),
 ]
 
 
