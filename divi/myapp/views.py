@@ -569,13 +569,13 @@ def voting(request):
 
 
 def submit_prices(request):
-    # Handle form submission to process the submitted prices
-    # You can access the submitted data using request.POST
-    print("test")
-    # Process the data and perform necessary actions
+    if request.method == 'POST':
+        # Iterate over the submitted data
+        for job_name, price in request.POST.items():
+            print(f"Job: {job_name}, Price: {price}")
+
     # Redirect the user to the desired page (e.g., 'jobs')
     return redirect('jobs')  # Assuming 'jobs' is the name of the desired page
-
 
 def scores_details(request, selected_profile):
     LogData(request).update_user_data()

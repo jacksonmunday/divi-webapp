@@ -150,6 +150,8 @@
                     </div>
                 {% endif %}
             {% endfor %}
+            <!-- Move the submit button inside the form -->
+            <button id="submit-button" type="submit">Submit Prices</button>
         </form>
     </div>
 </div>
@@ -174,15 +176,11 @@
                     </div>
                 {% endif %}
             {% endfor %}
+            <!-- Move the submit button inside the form -->
+            <button id="submit-button" type="submit">Submit Prices</button>
         </form>
     </div>
 </div>
-
-             <!-- Submit Prices Button -->
-            <form method="post" action="{% url 'submit_prices' %}">
-                {% csrf_token %}
-                <button id="submit-button" type="submit">Submit Prices</button>
-            </form>
 
         {% endif %}
 
