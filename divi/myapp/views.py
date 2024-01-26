@@ -368,7 +368,8 @@ class Profiles:
 
         profile_dict = {
             "name": profile_object.name,
-            "dates": profile_object.dates
+            "dates": profile_object.dates,
+            "votes": profile_object.votes
         }
 
         existing_data.append(profile_dict)
@@ -390,6 +391,7 @@ class Profiles:
                 for entry in data:
                     profile = Profile(entry['name'])
                     profile.dates = entry['dates']
+                    profile.votes = entry['votes']
                     profiles_list.append(profile)
         except (FileNotFoundError, json.JSONDecodeError):
             # Handle the case when the file is not found or cannot be decoded
@@ -416,6 +418,7 @@ class Profile:
     def __init__(self, name):
         self.name = name
         self.dates = []
+        self.votes = []
 
         self.rewards = self.get_current_rewards()
         self.loss = self.get_current_losses()
