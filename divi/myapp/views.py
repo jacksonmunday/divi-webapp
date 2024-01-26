@@ -127,14 +127,14 @@ class Jobs:
                 if vote[0] == job.name:
                     list.append(job)
 
-        return set(self.jobs_list)-set(list)
+        return set(self.jobs_list) - set(list)
 
     def get_job_objects(self):
         jobs_list = []
         with open(self.file_path, newline='') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
-                job = Job(row['name'], row['description'], row['reward'], row['cooldown'], row['last_completed'],
+                job = Job(row['name'], row['description'], row['cooldown'], row['last_completed'],
                           Utils.convert_str_to_bool(row['one_off']))
                 jobs_list.append(job)
         return self.sort_by_reward(jobs_list)
@@ -156,7 +156,7 @@ class Jobs:
             # Update jobs.csv with the new job
             with open(JOBS_FILE_PATH, 'a', newline='') as csvfile:
                 writer = csv.writer(csvfile)
-                writer.writerow([job.name, job.description, job.reward, job.cooldown, job.last_completed, job.one_off])
+                writer.writerow([job.name, job.description, job.cooldown, job.last_completed, job.one_off])
         else:
             print("Job already exists")
 
@@ -216,7 +216,7 @@ class Jobs:
 
     def update_csv_from_object_list(self):
         with open(self.file_path, 'w', newline='') as csvfile:
-            fieldnames = ['name', 'description', 'reward', 'cooldown', 'last_completed', 'one_off']
+            fieldnames = ['name', 'description', 'cooldown', 'last_completed', 'one_off']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
             writer.writeheader()
@@ -225,7 +225,6 @@ class Jobs:
                 writer.writerow({
                     'name': job.name,
                     'description': job.description,
-                    'reward': job.reward,
                     'cooldown': job.cooldown,
                     'last_completed': job.last_completed,
                     'one_off': job.one_off,
@@ -239,22 +238,19 @@ class Jobs:
 
 
 class Job:
-    def __init__(self, name, description, reward, cooldown, last_completed, one_off):
+    def __init__(self, name, description, cooldown, last_completed, one_off):
         self.name = name
         self.description = description
-        self.reward = reward
         self.cooldown = cooldown
         self.last_completed = last_completed
         self.one_off = one_off
+        self.reward = 1
 
         self.colour = 'normal'
         self.cooldown_formatted = None
         self.time_since_last_complete = None
         self.show_complete_button = None
         self.hours_until_ready = None
-
-    def print_job(self):
-        print(self.name, self.description, self.reward, self.cooldown, self.last_completed, self.one_off)
 
 
 class CompletedJobs:
@@ -338,7 +334,6 @@ class CompletedJob:
         job = Job(
             job_data.get("name", ""),
             job_data.get("description", ""),
-            job_data.get("reward", ""),
             job_data.get("cooldown", ""),
             job_data.get("last_completed", ""),
             job_data.get("one_off", ""),
@@ -574,7 +569,7 @@ def scores(request):
 
 def voting(request):
     selected_profile = request.session.get('selected_profile', None)
-    profile_object = Profiles().get_profile_by_name( selected_profile)
+    profile_object = Profiles().get_profile_by_name(selected_profile)
     jobs_list = Jobs().get_un_voted_jobs_from_profile(profile_object)
 
     return render(request, 'myapp/voting.html', {'selected_profile': selected_profile, 'jobs_list': jobs_list})
@@ -610,19 +605,18 @@ def add_job(request):
         description = description.replace('\\r\\n', '<br>')
         description = description[1:-1]
 
-        reward = request.POST.get('reward')
         cooldown_weeks = request.POST.get('cooldown_weeks')
         cooldown_days = request.POST.get('cooldown_days')
         cooldown_hours = request.POST.get('cooldown_hours')
 
         one_off = request.POST.get('one_off', False)
 
-        if name and description and reward and cooldown_weeks and cooldown_days and cooldown_hours:
+        if name and description and cooldown_weeks and cooldown_days and cooldown_hours:
             # Calculate cooldown in hours
             cooldown_in_hours = int(cooldown_weeks) * 7 * 24 + int(cooldown_days) * 24 + int(cooldown_hours)
 
             # Create the Job instance with the one_off parameter
-            new_job = Job(name, description, reward, cooldown_in_hours, '0001_01_01_00_00_00', one_off)
+            new_job = Job(name, description, cooldown_in_hours, '0001_01_01_00_00_00', one_off)
 
             # Add the new job
             Jobs().add_new_job(new_job)

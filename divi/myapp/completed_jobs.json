@@ -1,110 +1,11 @@
 [
   {
     "job": {
-      "name": "Empty dishwasher",
+      "name": "new_job_2",
       "description": "<br>",
-      "reward": "2",
+      "reward": 1,
       "cooldown": "0",
-      "last_completed": "2024_01_22_16_44_34",
-      "one_off": false,
-      "colour": "white"
-    },
-    "participants": [
-      "Dan"
-    ],
-    "who_pays": [
-      "Jackson",
-      "Kelsey",
-      "hello",
-      "Toby",
-      "Brie",
-      "yoooza",
-      "Olaf"
-    ],
-    "formatted_date": "22 January 2024  at 16:44"
-  },
-  {
-    "job": {
-      "name": "Empty indoor veggie bin",
-      "description": "<br>Must be full<br>",
-      "reward": "1",
-      "cooldown": "0",
-      "last_completed": "2024_01_22_16_03_11",
-      "one_off": false,
-      "colour": "white"
-    },
-    "participants": [
-      "Dan",
-      "Jackson",
-      "dodds",
-      "yozza"
-    ],
-    "who_pays": [
-      "Jackson",
-      "Kelsey",
-      "hello",
-      "Toby",
-      "Brie",
-      "yoooza",
-      "Olaf"
-    ],
-    "formatted_date": "22 January 2024  at 16:03"
-  },
-  {
-    "job": {
-      "name": "Empty indoor veggie bin",
-      "description": "<br>Must be full<br>",
-      "reward": "1",
-      "cooldown": "0",
-      "last_completed": "2024_01_22_16_21_08",
-      "one_off": false,
-      "colour": "white"
-    },
-    "participants": [
-      "Kelsey"
-    ],
-    "who_pays": [
-      "Jackson",
-      "Toby",
-      "Dan",
-      "yoooza",
-      "Olaf",
-      "hello",
-      "Brie"
-    ],
-    "formatted_date": "22 January 2024  at 16:21"
-  },
-  {
-    "job": {
-      "name": "Wheelie bins",
-      "description": "Take out<br>Take back in<br>",
-      "reward": "2",
-      "cooldown": "0",
-      "last_completed": "2024_01_23_08_10_24",
-      "one_off": false,
-      "colour": "white"
-    },
-    "participants": [
-      "Kelsey"
-    ],
-    "who_pays": [
-      "Jackson",
-      "yoooza",
-      "Dan",
-      "hello",
-      "Toby",
-      "Brie",
-      "Olaf"
-    ],
-    "formatted_date": "23 January 2024  at 8:10"
-  },
-  {
-    "job": {
-      "name": "new tes of job",
-      "description": "<br>",
-      "reward": "10",
-      "cooldown": "0",
-      "last_completed": "2024_01_25_10_33_28",
+      "last_completed": "2024_01_27_12_27_58",
       "one_off": true,
       "colour": "red"
     },
@@ -112,62 +13,15 @@
       "Jackson"
     ],
     "who_pays": [
-      "Dan",
-      "Olaf",
+      "testing new",
       "Toby",
-      "hello",
       "yoooza",
-      "Brie",
-      "Kelsey"
-    ],
-    "formatted_date": "25 January 2024  at 10:33"
-  },
-  {
-    "job": {
-      "name": "test new job added",
-      "description": "do<br>",
-      "reward": "10",
-      "cooldown": "0",
-      "last_completed": "2024_01_25_11_03_36",
-      "one_off": true,
-      "colour": "red"
-    },
-    "participants": [
-      "Jackson"
-    ],
-    "who_pays": [
       "Olaf",
+      "Brie",
+      "hello",
       "Kelsey",
-      "yoooza",
-      "Toby",
-      "Brie",
-      "Dan",
-      "hello"
-    ],
-    "formatted_date": "25 January 2024  at 11:03"
-  } ,
-  {
-    "job": {
-      "name": "Clean Fireplace ",
-      "description": "Empty ashes<br>Vacuum mess<br>",
-      "reward": "2",
-      "cooldown": "168",
-      "last_completed": "2024_01_27_10_41_42",
-      "one_off": false,
-      "colour": "#FF0000"
-    },
-    "participants": [
-      "Kelsey"
-    ],
-    "who_pays": [
-      "hello",
-      "Brie",
-      "Olaf",
-      "Jackson",
-      "Toby",
-      "yoooza",
       "Dan"
     ],
-    "formatted_date": "27 January 2024  at 10:41"
+    "formatted_date": "27 January 2024  at 12:27"
   }
 ]

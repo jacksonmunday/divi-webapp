@@ -86,6 +86,14 @@
       [
         "needs doing",
         "5"
+      ],
+      [
+        "new_job",
+        "5"
+      ],
+      [
+        "new_job_2",
+        "10"
       ]
     ]
   },
@@ -123,5 +131,99 @@
     "name": "hello",
     "dates": [],
     "votes": []
+  },
+  {
+    "name": "testing new",
+    "dates": [],
+    "votes": [
+      [
+        "Empty dishwasher",
+        "1"
+      ],
+      [
+        "Empty indoor veggie bin",
+        "1"
+      ],
+      [
+        "Mow lawns",
+        "1"
+      ],
+      [
+        "Empty indoor recycling",
+        "1"
+      ],
+      [
+        "Vacuum wood areas",
+        "1"
+      ],
+      [
+        "1212",
+        "1"
+      ],
+      [
+        "Clean Group towels",
+        "1"
+      ],
+      [
+        "Clean Fireplace ",
+        "1"
+      ],
+      [
+        "Clean sinks and toilet",
+        "1"
+      ],
+      [
+        "Deep clean rubbish bins",
+        "1"
+      ],
+      [
+        "Empty indoor rubbish",
+        "1"
+      ],
+      [
+        "Vacuum carpet areas    ",
+        "1"
+      ],
+      [
+        "Clean shower",
+        "1"
+      ],
+      [
+        "Wheelie bins",
+        "1"
+      ],
+      [
+        "testing job",
+        "1"
+      ],
+      [
+        "test new job added",
+        "1"
+      ],
+      [
+        "Kill all driveway weeds sdasdasdasdasdasd",
+        "1"
+      ],
+      [
+        "Kill all driveway weeds",
+        "1"
+      ],
+      [
+        "new tes of job",
+        "1"
+      ],
+      [
+        "Deep clean kitchen",
+        "1"
+      ],
+      [
+        "needs doing",
+        "1"
+      ],
+      [
+        "new_job",
+        "20"
+      ]
+    ]
   }
 ]

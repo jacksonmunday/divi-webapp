@@ -104,9 +104,10 @@
     </style>
 </head>
 <body>
-    <div class="container">
+
+<div class="container">
         <h1 class="center-text {% if selected_profile %}green{% else %}red{% endif %}">
-            Voting
+            Jobs
             {% if selected_profile %}
                 <br>Profile: {{ selected_profile }}
             {% else %}
@@ -127,10 +128,8 @@
         </form>
 
 
-           <!-- Your existing HTML content -->
+{% if selected_profile %}
 
-        {% if selected_profile %}
-            <!-- Reoccurring Jobs Section -->
 <div class="job-section" id="reoccurring-jobs">
     <div class="text-center">
         <div class="job-section-title">Reoccurring Jobs</div>
