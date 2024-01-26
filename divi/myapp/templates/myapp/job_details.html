@@ -153,7 +153,7 @@
     <p>Last Completed: {{ selected_job_details.time_since_last_complete }}</p>
                 {% endif %}
                 {% if not selected_job_details.show_complete_button %}
-                <p>Wait Time: {{ selected_job_details.hours_until_ready }} hours</p>
+                <div class="reward-box" style="background-color: {{selected_job_details.colour}};">Wait Time: {{ selected_job_details.hours_until_ready }} hours</div>
                 {% endif %}
                 {% endif %}
 
