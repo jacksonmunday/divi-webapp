@@ -120,6 +120,15 @@ class Jobs:
         self.update_job_colour()
         self.update_hours_until_ready()
 
+    def get_un_voted_jobs_from_profile(self, profile_object):
+        list = []
+        for job in self.jobs_list:
+            for vote in profile_object.votes:
+                if vote[0] == job.name:
+                    list.append(job)
+
+        return set(self.jobs_list)-set(list)
+
     def get_job_objects(self):
         jobs_list = []
         with open(self.file_path, newline='') as csvfile:
@@ -488,10 +497,11 @@ def jobs(request):  # GOOD
     selected_profile = request.session.get('selected_profile', None)
     jobs_list = Jobs().jobs_list
 
-    for profile in Profiles().list_of_objects:
-        if profile.name.lower() == request.session.get('selected_profile', None).lower():
-            if len(profile.votes) != len(jobs_list):
-                return redirect('voting')
+    if selected_profile:
+        for profile in Profiles().list_of_objects:
+            if profile.name.lower() == request.session.get('selected_profile', None).lower():
+                if len(profile.votes) != len(jobs_list):
+                    return redirect('voting')
 
     if request.method == 'POST':
         selected_profile = request.POST.get('selected_profile', None)
@@ -564,18 +574,23 @@ def scores(request):
 
 def voting(request):
     selected_profile = request.session.get('selected_profile', None)
-    jobs_list = Jobs().jobs_list
+    profile_object = Profiles().get_profile_by_name( selected_profile)
+    jobs_list = Jobs().get_un_voted_jobs_from_profile(profile_object)
+
     return render(request, 'myapp/voting.html', {'selected_profile': selected_profile, 'jobs_list': jobs_list})
 
 
 def submit_prices(request):
+    selected_profile = request.session.get('selected_profile', None)
     if request.method == 'POST':
-        # Iterate over the submitted data
+        profile = Profiles().get_profile_by_name(selected_profile)
         for job_name, price in request.POST.items():
-            print(f"Job: {job_name}, Price: {price}")
+            if job_name != 'csrfmiddlewaretoken':
+                profile.add_reward_vote(job_name, price)
+        Profiles().update_votes(profile)
 
-    # Redirect the user to the desired page (e.g., 'jobs')
     return redirect('jobs')  # Assuming 'jobs' is the name of the desired page
+
 
 def scores_details(request, selected_profile):
     LogData(request).update_user_data()
