@@ -6,6 +6,24 @@
       [
         "Indoor veggie bin",
         "0.5"
+      ],
+      [
+        "new job",
+        "20"
+      ]
+    ]
+  },
+  {
+    "name": "help",
+    "dates": [],
+    "votes": [
+      [
+        "Indoor veggie bin",
+        "20"
+      ],
+      [
+        "new job",
+        "20"
       ]
     ]
   }

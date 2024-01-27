@@ -2,10 +2,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Other meta tags and links -->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'myapp/favicon.ico' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}MyApp{% endblock %}</title>
 </head>
+
+
 <body>
     <nav>
         <a href="{% url 'jobs' %}">Jobs</a>
