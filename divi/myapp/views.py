@@ -76,10 +76,7 @@ class Utils:
                 return True
             else:
                 return False
-
-
         else:
-
             last_completed_time = datetime.strptime(job_object.last_completed, "%Y_%m_%d_%H_%M_%S")
             current_time = datetime.now()
             time_difference = current_time - last_completed_time
@@ -164,7 +161,7 @@ class Jobs:
             for profile in Profiles().list_of_objects:
                 for vote in profile.votes:
                     if vote[0] == job.name:
-                        reward += int(vote[1])
+                        reward += float(vote[1])
                         counter += 1
 
             if counter == len(Profiles().list_of_objects) and counter != 0:
@@ -174,8 +171,6 @@ class Jobs:
                 job.reward = 0
 
             new_list.append(job)
-
-            print(job.reward)
 
         self.jobs_list = new_list
 
@@ -265,7 +260,7 @@ class Jobs:
                 })
 
     def sort_by_reward(self):
-        sorted_list = sorted(self.jobs_list, key=lambda x: int(x.reward) if x.reward is not None else 0)
+        sorted_list = sorted(self.jobs_list, key=lambda x: float(x.reward) if x.reward is not None else 0)
         self.jobs_list = sorted_list
 
 
@@ -327,7 +322,6 @@ class CompletedJobs:
         try:
             with open(self.file_path, 'r') as file:
                 completed_jobs_data = json.load(file)
-                print(completed_jobs_data)
                 return [CompletedJob.from_json_data(job_data) for job_data in completed_jobs_data]
 
 
@@ -357,7 +351,7 @@ class CompletedJob:
         self.file_path = COMPLETED_JOBS_DATA_FILE_PATH
 
     def get_shared_reward(self):
-        return round(int(self.job.reward) / len(self.participants), 2)
+        return round(self.job.reward / len(self.participants), 2)
 
     @classmethod
     def from_json_data(cls, json_data):
@@ -474,13 +468,14 @@ class Profile:
         self.loss = self.get_current_losses()
         self.balance = round(self.rewards - self.loss, 2)
 
+
     def get_current_rewards(self):
         rewards = 0
         completed_jobs = CompletedJobs().complete_jobs_list
         for completed_job in completed_jobs:
             for participant in completed_job.participants:
                 if participant.lower() == self.name.lower():
-                    rewards += int(completed_job.job.reward) / len(completed_job.participants)
+                    rewards += completed_job.job.reward / len(completed_job.participants)
         return round(rewards, 2)
 
     def get_current_losses(self):
@@ -489,7 +484,8 @@ class Profile:
         for completed_job in completed_jobs:
             for who_pays in completed_job.who_pays:
                 if who_pays.lower() == self.name.lower():
-                    loss += int(completed_job.job.reward) / len(completed_job.who_pays)
+                    loss += completed_job.job.reward / len(completed_job.who_pays)
+
         return round(loss, 2)
 
     def add_reward_vote(self, job_name, vote):

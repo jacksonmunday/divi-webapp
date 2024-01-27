@@ -4,51 +4,25 @@
     "dates": [],
     "votes": [
       [
-        "put out bins",
-        "20"
+        "Vacuum house",
+        "4.5"
       ],
       [
-        "tes job",
-        "12"
-      ],
-      [
-        "binz",
-        "5"
+        "Mow lawns",
+        "10"
       ]
     ]
   },
   {
-    "name": "toby",
+    "name": "Toby",
     "dates": [],
     "votes": [
       [
-        "tes job",
-        "6"
-      ],
-      [
-        "put out bins",
-        "12"
-      ],
-      [
-        "binz",
+        "Vacuum house",
         "3"
-      ]
-    ]
-  },
-  {
-    "name": "olaf",
-    "dates": [],
-    "votes": [
-      [
-        "put out bins",
-        "1"
       ],
       [
-        "tes job",
-        "1"
-      ],
-      [
-        "binz",
+        "Mow lawns",
         "2"
       ]
     ]
