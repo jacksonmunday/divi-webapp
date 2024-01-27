@@ -118,11 +118,18 @@
                 <div class="job-section-title">Reoccurring Jobs</div>
                 {% for job in jobs_list %}
                     {% if not job.one_off %}
+                        {% if job.reward_flag %}
+
                         <button type="button" class="big-button job-button" onclick="updateJobDetails('{{ job.name }}')" style="background-color: {{ job.colour }}; color: black;">
                             {{ job.name }}
                             <div class="reward-box">{{ job.reward }}$</div>
 
                         </button>
+
+                        {% else %}
+                <button type="button" class="big-button job-button"> {{ job.name }} (Voting in Progress)
+                    </button>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
             </div>
@@ -134,10 +141,17 @@
                 <div class="job-section-title">One-off Jobs</div>
                 {% for job in jobs_list %}
                     {% if job.one_off %}
+                        {% if job.reward_flag %}
+
                         <button type="button" class="big-button job-button" onclick="updateJobDetails('{{ job.name }}')" style="background-color: {{ job.colour }}; color: black;">
                             {{ job.name }}
                             <div class="reward-box">{{ job.reward }}$</div>
                         </button>
+
+                        {% else %}
+                <button type="button" class="big-button job-button"> {{ job.name }} (Voting in Progress)
+                    </button>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
             </div>

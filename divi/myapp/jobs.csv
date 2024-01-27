@@ -1,24 +1,2 @@
 name,description,cooldown,last_completed,one_off
-Empty indoor veggie bin,<br>Must be full<br>,0,2024_01_22_16_21_08,False
-Empty indoor recycling,<br>Must be full<br>,0,2024_01_21_19_40_58,False
-Empty indoor rubbish,<br>Must be full<br>,0,2024_01_21_20_04_29,False
-1212,1<br>2<br>,193,2024_01_18_17_26_27,False
-Empty dishwasher,<br>,0,2024_01_22_16_44_34,False
-Wheelie bins,Take out<br>Take back in<br>,0,2024_01_23_08_10_24,False
-Clean Fireplace ,Empty ashes<br>Vacuum mess<br>,168,2024_01_27_10_41_42,False
-Vacuum carpet areas    ,Lounge<br>Hallway<br>Indoor toilet<br>Shower room<br>,168,2024_01_18_10_56_35,False
-Vacuum wood areas,Lounge<br>Kitchen<br>Dining area<br>,168,2024_01_18_10_57_39,False
-Clean Group towels,Wash them<br>Hang out to dry<br>Take back inside<br>,336,2024_01_09_05_15_48,False
-Mow lawns,Back yard<br>Front yard<br>Roadside<br>,165,2024_01_18_11_47_39,False
-Clean shower,<br>,672,2024_01_09_02_28_27,False
-Clean sinks and toilet,Shower Room sink<br>Toilet Sink<br>Clean toilet<br>Throw out empty rolls<br>,336,2024_01_08_23_59_50,False
-Deep clean kitchen,Clean wall tiles<br>Clean grime from sink<br>Clean windowsill<br>Wipe down cabinet doors<br><br>Clean stove top<br>Move kitchen appliances and clean behind<br><br>,504,2024_01_21_19_13_54,True
-Deep clean rubbish bins,Indoor recycling bin<br>Indoor rubbish bin<br>Indoor veggie bin<br>,672,2024_01_21_19_20_30,False
-testing job,<br>,0,0001_01_01_00_00_00,True
-new tes of job,<br>,0,2024_01_25_10_33_28,True
-test new job added,do<br>,0,2024_01_25_11_03_36,True
-Kill all driveway weeds,<br>,672,2024_01_09_00_07_35,True
-Kill all driveway weeds sdasdasdasdasdasd,<br>,672,2024_01_09_00_07_35,True
-needs doing,do<br>,0,0001_01_01_00_00_00,True
-new_job,<br>,0,0001_01_01_00_00_00,True
-new_job_2,<br>,0,2024_01_27_12_27_58,True
+put out bins,do that<br>,168,2024_01_27_13_10_42,False

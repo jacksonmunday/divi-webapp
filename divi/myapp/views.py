@@ -116,20 +116,22 @@ class Jobs:
 
     def __init__(self):
         self.file_path = JOBS_FILE_PATH
-        self.jobs_list = self.get_job_objects()
+        self.jobs_list = self.load_from_csv()
+        self.update_job_rewards()
         self.update_job_colour()
         self.update_hours_until_ready()
+        self.sort_by_reward()
 
     def get_un_voted_jobs_from_profile(self, profile_object):
-        list = []
+        list_ = []
         for job in self.jobs_list:
             for vote in profile_object.votes:
                 if vote[0] == job.name:
                     list.append(job)
 
-        return set(self.jobs_list) - set(list)
+        return set(self.jobs_list) - set(list_)
 
-    def get_job_objects(self):
+    def load_from_csv(self):
         jobs_list = []
         with open(self.file_path, newline='') as csvfile:
             reader = csv.DictReader(csvfile)
@@ -137,13 +139,36 @@ class Jobs:
                 job = Job(row['name'], row['description'], row['cooldown'], row['last_completed'],
                           Utils.convert_str_to_bool(row['one_off']))
                 jobs_list.append(job)
-        return self.sort_by_reward(jobs_list)
+        return jobs_list
 
     def get_job_details(self, searching_job_name):
         for job in self.jobs_list:
             if job.name == searching_job_name:
                 return job
         return None
+
+    def update_job_rewards(self):
+        new_list = []
+        for job in self.jobs_list:
+            reward = 0
+            counter = 0
+            for profile in Profiles().list_of_objects:
+                for vote in profile.votes:
+                    if vote[0] == job.name:
+                        reward += int(vote[1])
+                        counter += 1
+
+            if counter == len(Profiles().list_of_objects) and counter != 0:
+                job.reward_flag = True
+                job.reward = round(reward / len(Profiles().list_of_objects), 2)
+            else:
+                job.reward = 0
+
+            new_list.append(job)
+
+            print(job.reward)
+
+        self.jobs_list = new_list
 
     def add_new_job(self, job):
         job_exists = False
@@ -160,7 +185,7 @@ class Jobs:
         else:
             print("Job already exists")
 
-        self.jobs_list = self.get_job_objects()
+        self.jobs_list = self.load_from_csv()
 
     def update_job_colour(self):
         # Calculate time difference and update job color
@@ -230,11 +255,9 @@ class Jobs:
                     'one_off': job.one_off,
                 })
 
-    @staticmethod
-    def sort_by_reward(jobs_list):
-        # Use the sorted function to sort the list based on the 'reward' key
-        sorted_list = sorted(jobs_list, key=lambda x: int(x.reward))
-        return sorted_list
+    def sort_by_reward(self):
+        sorted_list = sorted(self.jobs_list, key=lambda x: int(x.reward) if x.reward is not None else 0)
+        self.jobs_list = sorted_list
 
 
 class Job:
@@ -244,13 +267,14 @@ class Job:
         self.cooldown = cooldown
         self.last_completed = last_completed
         self.one_off = one_off
-        self.reward = 1
 
+        self.reward = None
         self.colour = 'normal'
         self.cooldown_formatted = None
         self.time_since_last_complete = None
         self.show_complete_button = None
         self.hours_until_ready = None
+        self.reward_flag = False
 
 
 class CompletedJobs:
@@ -282,6 +306,7 @@ class CompletedJobs:
             "formatted_date": Utils().format_date(completed_job.job.last_completed)
         }
 
+
         existing_data.append(new_completed_job)
 
         # Save updated JSON back to the file
@@ -294,7 +319,10 @@ class CompletedJobs:
         try:
             with open(self.file_path, 'r') as file:
                 completed_jobs_data = json.load(file)
+                print(completed_jobs_data)
                 return [CompletedJob.from_json_data(job_data) for job_data in completed_jobs_data]
+
+
         except (FileNotFoundError, json.JSONDecodeError):
             return []
 
@@ -320,13 +348,9 @@ class CompletedJob:
         self.shared_reward = self.get_shared_reward()
         self.file_path = COMPLETED_JOBS_DATA_FILE_PATH
 
-    def print_all(self):
-        print(self.job)
-        print(self.participants)
-        print(self.who_pays)
-
     def get_shared_reward(self):
         return round(int(self.job.reward) / len(self.participants), 2)
+
 
     @classmethod
     def from_json_data(cls, json_data):
@@ -338,6 +362,7 @@ class CompletedJob:
             job_data.get("last_completed", ""),
             job_data.get("one_off", ""),
         )
+        job.reward  = job_data.get("reward", "")
         participants = json_data.get("participants", [])
         who_pays = json_data.get("who_pays", [])
         formatted_date = json_data.get("formatted_date", "")
@@ -473,6 +498,7 @@ def complete_job(request):
     if selected_job_name:
         Jobs().update_after_completed(selected_job_name)
         job_object = Jobs().get_job_details(selected_job_name)
+
         completed_job_object = CompletedJob(job=job_object,
                                             participants=[selected_profile],
                                             who_pays=list(set(Profiles().list_of_strings) - set([selected_profile])),

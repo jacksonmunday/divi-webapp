@@ -1,27 +1,18 @@
 [
   {
     "job": {
-      "name": "new_job_2",
-      "description": "<br>",
-      "reward": 1,
-      "cooldown": "0",
-      "last_completed": "2024_01_27_12_27_58",
-      "one_off": true,
-      "colour": "red"
+      "name": "put out bins",
+      "description": "do that<br>",
+      "reward": 20.0,
+      "cooldown": "168",
+      "last_completed": "2024_01_27_13_10_42",
+      "one_off": false,
+      "colour": "#FF0000"
     },
     "participants": [
       "Jackson"
     ],
-    "who_pays": [
-      "testing new",
-      "Toby",
-      "yoooza",
-      "Olaf",
-      "Brie",
-      "hello",
-      "Kelsey",
-      "Dan"
-    ],
-    "formatted_date": "27 January 2024  at 12:27"
+    "who_pays": [],
+    "formatted_date": "27 January 2024  at 13:10"
   }
 ]
