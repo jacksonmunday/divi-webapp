@@ -1,38 +1,18 @@
 [
   {
     "job": {
-      "name": "Vacuum house",
-      "description": "<br>",
-      "reward": 3.75,
-      "cooldown": "168",
-      "last_completed": "2024_01_27_18_29_20",
-      "one_off": false,
-      "colour": "#FF0000"
-    },
-    "participants": [
-      "Jackson"
-    ],
-    "who_pays": [
-      "Toby"
-    ],
-    "formatted_date": "27 January 2024  at 18:29"
-  },
-  {
-    "job": {
-      "name": "Mow lawns",
-      "description": "<br>",
-      "reward": 6.0,
+      "name": "Indoor veggie bin",
+      "description": "Must be full<br>",
+      "reward": 0.5,
       "cooldown": "0",
-      "last_completed": "2024_01_27_18_30_26",
-      "one_off": true,
-      "colour": "red"
+      "last_completed": "2024_01_27_18_54_21",
+      "one_off": false,
+      "colour": "white"
     },
     "participants": [
-      "Toby"
-    ],
-    "who_pays": [
       "Jackson"
     ],
-    "formatted_date": "27 January 2024  at 18:30"
+    "who_pays": [],
+    "formatted_date": "27 January 2024  at 18:54"
   }
 ]

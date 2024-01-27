@@ -597,6 +597,7 @@ def scores(request):
 
 
 def voting(request):
+    LogData(request).update_user_data()
     selected_profile = request.session.get('selected_profile', None)
     profile_object = Profiles().get_profile_by_name(selected_profile)
     jobs_list = Jobs().get_un_voted_jobs_from_profile(profile_object)
@@ -656,6 +657,7 @@ def add_job(request):
 
 
 def add_profile(request):
+    LogData(request).update_user_data()
     if request.method == 'POST':
         profile_name = request.POST.get('profile_name')
 
