@@ -6,6 +6,50 @@
       [
         "put out bins",
         "20"
+      ],
+      [
+        "tes job",
+        "12"
+      ],
+      [
+        "binz",
+        "5"
+      ]
+    ]
+  },
+  {
+    "name": "toby",
+    "dates": [],
+    "votes": [
+      [
+        "tes job",
+        "6"
+      ],
+      [
+        "put out bins",
+        "12"
+      ],
+      [
+        "binz",
+        "3"
+      ]
+    ]
+  },
+  {
+    "name": "olaf",
+    "dates": [],
+    "votes": [
+      [
+        "put out bins",
+        "1"
+      ],
+      [
+        "tes job",
+        "1"
+      ],
+      [
+        "binz",
+        "2"
       ]
     ]
   }

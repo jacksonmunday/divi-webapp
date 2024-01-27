@@ -70,13 +70,22 @@ class Utils:
         return f"{weeks} weeks, {days} days, {hours} hours"
 
     @staticmethod
-    def show_complete_button(selected_job_details):
-        last_completed_time = datetime.strptime(selected_job_details.last_completed, "%Y_%m_%d_%H_%M_%S")
-        current_time = datetime.now()
-        time_difference = current_time - last_completed_time
-        cooldown_hours = int(selected_job_details.cooldown)
+    def show_complete_button(job_object):
+        if job_object.one_off:
+            if job_object.last_completed == '0001_01_01_00_00_00':
+                return True
+            else:
+                return False
 
-        return time_difference.total_seconds() / 3600 > cooldown_hours
+
+        else:
+
+            last_completed_time = datetime.strptime(job_object.last_completed, "%Y_%m_%d_%H_%M_%S")
+            current_time = datetime.now()
+            time_difference = current_time - last_completed_time
+            cooldown_hours = int(job_object.cooldown)
+
+            return time_difference.total_seconds() / 3600 > cooldown_hours
 
 
 class LogData:
@@ -127,7 +136,7 @@ class Jobs:
         for job in self.jobs_list:
             for vote in profile_object.votes:
                 if vote[0] == job.name:
-                    list.append(job)
+                    list_.append(job)
 
         return set(self.jobs_list) - set(list_)
 
@@ -306,7 +315,6 @@ class CompletedJobs:
             "formatted_date": Utils().format_date(completed_job.job.last_completed)
         }
 
-
         existing_data.append(new_completed_job)
 
         # Save updated JSON back to the file
@@ -351,7 +359,6 @@ class CompletedJob:
     def get_shared_reward(self):
         return round(int(self.job.reward) / len(self.participants), 2)
 
-
     @classmethod
     def from_json_data(cls, json_data):
         job_data = json_data.get("job", {})
@@ -362,7 +369,7 @@ class CompletedJob:
             job_data.get("last_completed", ""),
             job_data.get("one_off", ""),
         )
-        job.reward  = job_data.get("reward", "")
+        job.reward = job_data.get("reward", "")
         participants = json_data.get("participants", [])
         who_pays = json_data.get("who_pays", [])
         formatted_date = json_data.get("formatted_date", "")

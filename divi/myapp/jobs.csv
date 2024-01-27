@@ -1,2 +1,4 @@
 name,description,cooldown,last_completed,one_off
+binz,1<br>,336,2024_01_27_15_49_54,False
+tes job,1<br>2<br>3<br>,0,2024_01_27_15_49_06,True
 put out bins,do that<br>,168,2024_01_27_13_10_42,False
